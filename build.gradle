@@ -1,0 +1,8 @@
+// Top-level build file for the restored MiniWorld ("FakerVsBin") sources.
+plugins {
+    id 'com.android.application' version '8.5.2' apply false
+}
+
+tasks.register('clean', Delete) {
+    delete rootProject.layout.buildDirectory
+}

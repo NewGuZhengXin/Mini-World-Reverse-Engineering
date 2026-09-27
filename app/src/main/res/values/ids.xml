@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <item type="id" name="fullscreen_content" />
+    <item type="id" name="fullscreen_content_controls" />
+    <item type="id" name="dummy_button" />
+    <item type="id" name="AppPlayDownloadTitle" />
+    <item type="id" name="AppPlayUpdateProgressBar" />
+</resources>

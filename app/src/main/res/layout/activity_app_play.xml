@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout android:background="#ff0099cc" android:layout_width="fill_parent" android:layout_height="fill_parent"
+  xmlns:android="http://schemas.android.com/apk/res/android">
+    <TextView android:textSize="50.0sp" android:textStyle="bold" android:textColor="#ff33b5e5" android:gravity="center" android:id="@id/fullscreen_content" android:layout_width="fill_parent" android:layout_height="fill_parent" android:text="@string/dummy_content" android:keepScreenOn="true" />
+    <FrameLayout android:fitsSystemWindows="true" android:layout_width="fill_parent" android:layout_height="fill_parent">
+        <LinearLayout android:layout_gravity="bottom|center" android:orientation="horizontal" android:id="@id/fullscreen_content_controls" android:background="@color/black_overlay" android:layout_width="fill_parent" android:layout_height="wrap_content" style="metaButtonBarStyle">
+            <Button android:id="@id/dummy_button" android:layout_width="0.0dip" android:layout_height="wrap_content" android:text="@string/dummy_button" android:layout_weight="1.0" style="metaButtonBarButtonStyle" />
+        </LinearLayout>
+    </FrameLayout>
+</FrameLayout>

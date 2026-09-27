@@ -1,0 +1,181 @@
+ENCHANT_GRID_MAX 	= 30;
+ENCHANT_ATTR_MAX	= 5;		--最大属性条数
+Enchant_Type		= 1;  		--1对物品附魔，2对卷轴附魔
+
+function EnchantCloseBtn_OnMouseDown()
+	local btnIcon = getglobal("EnchantFrameCloseBtnIcon");
+	btnIcon:SetTexUV(396,226,33,33);
+	btnIcon:SetSize(37,37);
+end
+
+function EnchantCloseBtn_OnMouseUp()
+	local btnIcon = getglobal("EnchantFrameCloseBtnIcon");
+	btnIcon:SetTexUV(351,222,42,43);
+	btnIcon:SetSize(47,48);
+end
+
+function EnchantFrameCloseBtn_OnClick()
+	EnchantFrame:Hide();
+end
+
+function EnchantFrame_OnLoad()
+	this:RegisterEvent("GE_BACKPACK_CHANGE");
+
+	for i=1,ENCHANT_GRID_MAX/5 do
+		for j=1,5 do
+			local itembtn = getglobal("EnchantTopBoxItem"..((i-1)*5+j));
+			itembtn:SetPoint("topleft", "EnchantTopBoxPlane", "topleft", (j-1)*82, (i-1)*85);
+		end
+	end
+
+	for i=1,ENCHANT_GRID_MAX/5 do
+		for j=1,5 do
+			local itembtn = getglobal("EnchantBottomBoxItem"..((i-1)*5+j));
+			itembtn:SetPoint("topleft", "EnchantBottomBoxPlane", "topleft", (j-1)*82, (i-1)*85);
+		end
+	end
+
+	for i=1, ENCHANT_ATTR_MAX do
+		local attrDesc 	= getglobal("EnchantFrameAttr"..i.."Desc");
+		attrDesc:SetPoint("topleft", "EnchantFrameGreenLine", "topright", 5, (i-1)*44 - 75);		
+	end 
+end
+
+function EnchantFrame_OnEvent()
+	if arg1 == "GE_BACKPACK_CHANGE" then
+		if EnchantFrame:IsShown() then
+			local ge = GameEventQue:getCurEvent();
+			local grid_index = ge.body.backpack.grid_index;
+			if grid_index >= BACKPACK_START_INDEX and grid_index < BACKPACK_START_INDEX+1006 then
+				UpdateEnchanGrid();
+			end
+		end	
+	end
+end
+
+function EnchantFrame_OnShow()
+	if Enchant_Type ==  1 then
+		EnchantFrameTopTitle:Show();
+		EnchantFrameTopTitle1:Hide();
+		EnchantFrameBottomTitle:Show();
+		EnchantFrameBottomTitle1:Hide();
+	elseif Enchant_Type == 2 then
+		EnchantFrameTopTitle:Hide();
+		EnchantFrameTopTitle1:Show();
+		EnchantFrameBottomTitle:Hide();
+		EnchantFrameBottomTitle1:Show();
+	end
+
+	UpdateEnchanGrid();
+
+	for i=1, ENCHANT_ATTR_MAX do
+		local attrDesc 	= getglobal("EnchantFrameAttr"..i.."Desc");
+		local desc = "火焰附加1".."#cff7d00→2";
+		attrDesc:SetText(desc, 255, 255, 255);		
+	end 
+end
+
+function UpdateEnchanGrid()
+	local t_topBoxGrid = {};
+	local t_bottomBoxGrid = {};
+	for i=1, BACK_PACK_GRID_MAX do
+		local grid_index = BACKPACK_START_INDEX + i - 1;
+		local itemId = ClientBackpack:getGridItem(grid_index);
+		local itemDef = DefMgr:getItemDef(itemId);
+		if itemDef ~= nil then
+			if Enchant_Type == 1 then
+				if itemDef.EnchantTag == 1 or itemDef.EnchantTag == 3 then
+					table.insert(t_topBoxGrid, grid_index);
+				elseif itemDef.EnchantTag == 2 or itemDef.EnchantTag == 3 then
+					table.insert(t_bottomBoxGrid, grid_index);
+				end
+			elseif Enchant_Type == 2 then
+				if itemDef.EnchantTag == 1 or itemDef.EnchantTag == 3 then
+					table.insert(t_bottomBoxGrid, grid_index);
+				elseif itemDef.EnchantTag == 2 or itemDef.EnchantTag == 3 then
+					table.insert(t_topBoxGrid, grid_index);
+				end
+			end
+		end
+	end
+	for i=1, MAX_SHORTCUT do
+		local grid_index = SHORTCUT_START_INDEX + i - 1;
+		local itemId = ClientBackpack:getGridItem(grid_index);
+		local itemDef = DefMgr:getItemDef(itemId);
+		if itemDef ~= nil then
+			if Enchant_Type == 1 then
+				if itemDef.EnchantTag == 1 or itemDef.EnchantTag == 3 then
+					table.insert(t_topBoxGrid, grid_index);
+				elseif itemDef.EnchantTag == 2 or itemDef.EnchantTag == 3 then
+					table.insert(t_bottomBoxGrid, grid_index);
+				end
+			elseif Enchant_Type == 2 then
+				if itemDef.EnchantTag == 1 or itemDef.EnchantTag == 3 then
+					table.insert(t_bottomBoxGrid, grid_index);
+				elseif itemDef.EnchantTag == 2 or itemDef.EnchantTag == 3 then
+					table.insert(t_topBoxGrid, grid_index);
+				end
+			end
+		end
+	end
+
+	for i=1, ENCHANT_GRID_MAX do
+		local topItem 		= getglobal("EnchantTopBoxItem"..i);
+		local topItemIcon 	= getglobal("EnchantTopBoxItem"..i.."ContentIcon");
+		local topItemNum 	= getglobal("EnchantTopBoxItem"..i.."ContentCount");
+		local topItemDurbar 	= getglobal("EnchantTopBoxItem"..i.."ContentDuration");
+		if i <= #(t_topBoxGrid) then
+			topItem:SetClientID(t_topBoxGrid[i]+1);
+			UpdateItemIconCount(topItemIcon, topItemNum, topItemDurbar, t_topBoxGrid[i]);
+		else
+			topItem:SetClientID(0);
+			topItemIcon:SetTextureHuires(ClientBackpack:getNullItemIcon());
+			topItemNum:SetText("");
+			topItemDurbar:Hide();
+		end
+	end
+	for i=1, ENCHANT_GRID_MAX do
+		local bottomItem 	= getglobal("EnchantBottomBoxItem"..i);
+		local bottomItemIcon	= getglobal("EnchantBottomBoxItem"..i.."ContentIcon");
+		local bottomItemNum	= getglobal("EnchantBottomBoxItem"..i.."ContentCount");
+		local bottomItemDurbar  = getglobal("EnchantBottomBoxItem"..i.."ContentDuration");
+		if i <= #(t_bottomBoxGrid) then
+			bottomItem:SetClientID(t_bottomBoxGrid[i]+1);
+			UpdateItemIconCount(bottomItemIcon, bottomItemNum, bottomItemDurbar, t_bottomBoxGrid[i]);
+		else
+			bottomItem:SetClientID(0);
+			bottomItemIcon:SetTextureHuires(ClientBackpack:getNullItemIcon());
+			bottomItemNum:SetText("");
+			bottomItemDurbar:Hide();
+		end
+	end
+end
+
+function EnchantFrame_OnHide()
+end
+
+function EnchantItemBtn_OnClick()
+end
+
+function EnchantItemBtn_OnMouseDownUpdate()
+end
+
+function EnchantFrameAddStar_OnClick()
+end
+
+function EnchantFrameEnchantBtn_OnClick()
+end
+-------------------------------------------------EnchantItemBtn-----------------------------------------------------
+function EnchantItemBtn_OnClick()
+	local clientId = this:GetClientID();
+	if clientId == 0 then return end
+
+	local btnName = this:GetName();
+	local grid_index = clientId - 1;
+	if string.find(btnName, "EnchantTopBoxItem") then
+	elseif string.find(btnName, "EnchantBottomBox") then
+	end
+end
+
+function EnchantItemBtn_OnMouseDownUpdate()
+end

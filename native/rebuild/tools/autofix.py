@@ -1,0 +1,393 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+"""
+autofix.py - close the gap between "Hex-Rays output" and "clang accepts it".
+
+Compiles every translation unit, harvests the diagnostics and feeds them back
+into the generated headers:
+
+  * "unknown type name 'X'"        -> opaque struct tag X
+  * "use of undeclared identifier 'X'"
+        used as "X("                 -> extern function prototype
+        used in type position        -> opaque struct tag X
+        otherwise                    -> extern object of unknown width
+
+Anything left over is reported with the offending source lines so the pattern
+can be handled properly in transform.py.
+
+Exit status is 0 when everything compiles, 1 otherwise; the printed
+"retransform" line tells the driver whether transform.py must run again (it must
+whenever the opaque type list grew, because the "struct " prefixing happens
+during the transform).
+
+Usage:
+    python autofix.py --ndk <ndk dir> [--rounds 4] [--jobs N]
+"""
+
+import argparse
+import concurrent.futures as cf
+import os
+import re
+import subprocess
+import sys
+from collections import Counter, defaultdict
+
+sys.stdout.reconfigure(encoding="utf-8")
+
+HERE = os.path.dirname(os.path.abspath(__file__))
+REBUILD = os.path.abspath(os.path.join(HERE, ".."))
+INCLUDE = os.path.join(REBUILD, "include")
+BUILD = os.path.join(REBUILD, "build")
+SRC = os.path.join(BUILD, "src")
+TYPES = os.path.join(INCLUDE, "decomp_types.h")
+EXTERNS = os.path.join(INCLUDE, "decomp_externs.h")
+EXTERNS_C = os.path.join(SRC, "_decomp_externs.c")
+
+API = 21
+TARGET = "armv7a-linux-androideabi%d" % API
+
+# clang promotes several of these to errors even in gnu89; the pseudocode relies
+# on the permissive C89 behaviour (implicit int, implicit declarations, int and
+# pointer freely mixed), so switch them back off.
+COMPAT_FLAGS = [
+    "-std=gnu89", "-w", "-fPIC",
+    "-Wno-int-conversion",
+    "-Wno-incompatible-pointer-types",
+    "-Wno-implicit-function-declaration",
+    "-Wno-implicit-int",
+    "-Wno-return-type",
+    "-Wno-pointer-sign",
+    "-Wno-constant-conversion",
+    "-Wno-parentheses-equality",
+    # clang stops after 20 errors per file by default, which hides almost all of
+    # them; the harvest needs the complete list
+    "-ferror-limit=0",
+]
+
+# NOTE: matches "error:" and "fatal error:" alike; a missing header makes every
+# translation unit fail with the latter, which must not be silently skipped
+ERROR_RE = re.compile(
+    r"^(?P<file>.+?):(?P<line>\d+):(?:\d+:)?\s*(?:\w+ )?error:\s*(?P<msg>.*)$")
+UNKNOWN_TYPE_RE = re.compile(r"unknown type name '([^']+)'")
+UNDECLARED_RE = re.compile(r"use of undeclared identifier '([^']+)'")
+NO_MEMBER_RE = re.compile(
+    r"no member named '(\w+)' in '(?:struct|union) (\w+)'")
+
+# never declare these; they are either keywords or handled elsewhere
+C_KEYWORDS = set("""
+auto break case char const continue default do double else enum extern float
+for goto if inline int long register restrict return short signed sizeof
+static struct switch typedef union unsigned void volatile while
+_DWORD _QWORD _BYTE _WORD _BOOL1 _BOOL2 _BOOL4 decomp_int8 decomp_int16
+decomp_int32 decomp_int64 decomp_int128 decomp_uint8 decomp_uint16
+decomp_uint32 decomp_uint64 decomp_uint128
+""".split())
+
+IDA_GLOBAL_RE = re.compile(
+    r"^(?:byte|word|dword|qword|flt|dbl|off|unk|stru|loc|jpt|asc|def|algn)"
+    r"(?:3)?_[0-9A-Fa-f]+$")
+
+# Hex-Rays' own auto-generated locals; they are never type names, and letting
+# one into the opaque list makes "struct a5" out of an ordinary expression
+AUTO_LOCAL_RE = re.compile(r"^[avd]\d+$|^sub_[0-9A-Fa-f]+$|^loc_")
+
+# IDA's own names for code that has no source-level identity. They are always
+# functions wherever they appear, and declaring one as an object turns every
+# call to it into "called object is not a function".
+CODE_NAME_RE = re.compile(r"^(?:sub_|loc_|j_|nullsub_|unknown_libname_|start$|"
+                          r"__imp_|jpt_|def_|algn_)")
+
+TYPES_END = "#endif /* DECOMP_TYPES_H */"
+EXTERNS_END = "#endif /* DECOMP_EXTERNS_H */"
+
+TYPES_TEMPLATE = """/*
+ * decomp_types.h - opaque declarations for the C++ classes the decompiler
+ * refers to by name.
+ *
+ * Hex-Rays writes "AIFollowParent *this" and "ClientActor *lpsrc" without ever
+ * declaring those classes. Reconstructing the real class layouts is not
+ * possible from the pseudocode, so each name is declared as a complete but
+ * meaningless struct - enough for pointers, parameters and by-value locals,
+ * which is all the generated code does with them (field access goes through
+ * explicit "*(_DWORD *)(p + 0x1C)" casts).
+ *
+ * They are deliberately *tags* and not typedefs: Hex-Rays names local
+ * variables after their own type ("Block *Block;"), and C keeps typedefs and
+ * ordinary identifiers in one namespace, so a typedef would make every such
+ * statement a syntax error. A tag lives in its own namespace and cannot be
+ * shadowed. tools/transform.py spells the "struct " keyword at the type
+ * positions.
+ *
+ * Generated by tools/autofix.py - do not edit.
+ */
+
+#ifndef DECOMP_TYPES_H
+#define DECOMP_TYPES_H
+
+/* A stand-in for the identifiers whose kind could not be recovered at all.
+ * "struct decomp_any *" is the most permissive declaration available: it can be
+ * dereferenced, subscripted and member-accessed, and every conversion in or out
+ * of it is already switched off. Missing members accumulate here. */
+struct decomp_any { unsigned char _pad[128]; };
+
+/* ---- generated ---- */
+
+#endif /* DECOMP_TYPES_H */
+"""
+
+EXTERNS_TEMPLATE = """/*
+ * decomp_externs.h - extern declarations for the identifiers the pseudocode
+ * uses but never declares.
+ *
+ * Hex-Rays emits references to globals and static class members without ever
+ * showing their definition, because they live in the original .so's .data/.bss
+ * and not in the code it decompiled. Their real types are not recoverable, so
+ * each one is declared with the width its usage implies. The matching storage
+ * lives in build/src/_decomp_externs.c.
+ *
+ * Generated by tools/autofix.py - do not edit.
+ */
+
+#ifndef DECOMP_EXTERNS_H
+#define DECOMP_EXTERNS_H
+
+/* ---- generated ---- */
+
+#endif /* DECOMP_EXTERNS_H */
+"""
+
+
+def ensure_headers():
+    for path, text in ((TYPES, TYPES_TEMPLATE), (EXTERNS, EXTERNS_TEMPLATE)):
+        if not os.path.exists(path):
+            with open(path, "w", encoding="utf-8") as fh:
+                fh.write(text)
+
+
+def cc(ndk):
+    return os.path.join(ndk, "toolchains", "llvm", "prebuilt", "windows-x86_64",
+                        "bin", "%s-clang.cmd" % TARGET)
+
+
+def sources():
+    out = []
+    for dp, _d, ns in os.walk(SRC):
+        for n in ns:
+            if n.endswith(".c"):
+                out.append(os.path.join(dp, n))
+    out.sort()
+    return out
+
+
+def syntax_check(args):
+    path, ndk = args
+    cmd = [cc(ndk), "-fsyntax-only"] + COMPAT_FLAGS + ["-I", INCLUDE, path]
+    p = subprocess.run(cmd, capture_output=True, text=True, errors="replace")
+    errs = []
+    for line in (p.stdout + p.stderr).splitlines():
+        m = ERROR_RE.match(line.strip())
+        if m:
+            errs.append((int(m.group("line")), m.group("msg")))
+    return path, errs
+
+
+def read_line(path, lineno):
+    try:
+        with open(path, encoding="utf-8", errors="replace") as fh:
+            for i, line in enumerate(fh, 1):
+                if i == lineno:
+                    return line
+    except OSError:
+        pass
+    return ""
+
+
+def existing(path, end_marker, pattern):
+    if not os.path.exists(path):
+        return set()
+    return set(re.findall(pattern, open(path, encoding="utf-8").read(), re.M))
+
+
+def add_types(names):
+    have = existing(TYPES, TYPES_END, r"^struct (\w+) \{")
+    new = sorted(n for n in names
+                 if n not in have and n not in C_KEYWORDS
+                 and not AUTO_LOCAL_RE.match(n)
+                 and re.fullmatch(r"[A-Za-z_]\w*", n))
+    if not new:
+        return 0
+    txt = open(TYPES, encoding="utf-8").read()
+    block = "\n".join(
+        "struct %s { unsigned char _pad[128]; };" % n for n in new)
+    txt = txt.replace(TYPES_END, block + "\n\n" + TYPES_END)
+    open(TYPES, "w", encoding="utf-8").write(txt)
+    return len(new)
+
+
+# int is too narrow a stand-in: it cannot be dereferenced, subscripted or
+# member-accessed. A pointer to one shared opaque struct can do all three, and
+# every conversion in or out of it is already switched off.
+ANY_TYPE = "struct decomp_any *"
+
+
+def add_externs(objs, funcs):
+    have_o = existing(EXTERNS, EXTERNS_END, r"^extern struct decomp_any \*(\w+);")
+    have_f = existing(EXTERNS, EXTERNS_END, r"^extern int (\w+)\(\);")
+    new_o = sorted(o for o in objs
+                   if o not in have_o and o not in C_KEYWORDS
+                   and not IDA_GLOBAL_RE.match(o)
+                   and not CODE_NAME_RE.match(o)
+                   and re.fullmatch(r"[A-Za-z_]\w*", o))
+    new_f = sorted(f for f in funcs
+                   if f not in have_f and f not in C_KEYWORDS
+                   and re.fullmatch(r"[A-Za-z_]\w*", f))
+    if not new_o and not new_f:
+        return 0, 0
+
+    txt = open(EXTERNS, encoding="utf-8").read()
+    block = []
+    # a guard per declaration: some of these names (NAN, INFINITY, ...) turn out
+    # to be macros once the system headers are in, and redeclaring a macro as an
+    # object is a hard error
+    block += ["#ifndef %s\nextern %s%s;\n#endif" % (n, ANY_TYPE, n) for n in new_o]
+    block += ["#ifndef %s\nextern int %s();\n#endif" % (n, n) for n in new_f]
+    txt = txt.replace(EXTERNS_END, "\n".join(block) + "\n\n" + EXTERNS_END)
+    open(EXTERNS, "w", encoding="utf-8").write(txt)
+
+    if new_o:
+        c = open(EXTERNS_C, "w", encoding="utf-8") if not os.path.exists(EXTERNS_C) \
+            else open(EXTERNS_C, "a", encoding="utf-8")
+        if c.tell() == 0:
+            c.write("/* generated by native/rebuild/tools/autofix.py - do not edit */\n")
+            c.write('#include "decomp_compat.h"\n#include "decomp_types.h"\n\n')
+        for n in new_o:
+            c.write("#ifndef %s\nstruct decomp_any *%s;\n#endif\n" % (n, n))
+        c.close()
+    return len(new_o), len(new_f)
+
+
+def add_members(members):
+    """
+    A few of the opaque structs are in fact named in the code: Hex-Rays emits
+    "ev->ie_proc" because the original IDB had a struct type for it. Rather than
+    keep the layout, the member is appended as an unknown-width slot so the
+    access compiles.
+    """
+    if not members:
+        return 0
+    txt = open(TYPES, encoding="utf-8").read()
+    added = 0
+    for struct_name, fields in sorted(members.items()):
+        m = re.search(r"^struct %s \{ ([^\n]*)\};$" % re.escape(struct_name),
+                      txt, re.M)
+        if not m:
+            continue
+        have = set(re.findall(r"\b(\w+);", m.group(1)))
+        new = sorted(f for f in fields if f not in have)
+        if not new:
+            continue
+        repl = "struct %s { %s %s};" % (
+            struct_name, m.group(1),
+            " ".join("_DWORD %s;" % f for f in new))
+        txt = txt[:m.start()] + repl + txt[m.end():]
+        added += len(new)
+    if added:
+        open(TYPES, "w", encoding="utf-8").write(txt)
+    return added
+
+
+def main():
+    ap = argparse.ArgumentParser()
+    ap.add_argument("--ndk", required=True)
+    ap.add_argument("--rounds", type=int, default=4)
+    ap.add_argument("--jobs", type=int, default=os.cpu_count())
+    ap.add_argument("--report", type=int, default=25)
+    args = ap.parse_args()
+
+    ndk = os.path.abspath(args.ndk)
+    ensure_headers()
+    files = sources()
+    print("checking %d translation units against %s" % (len(files), TARGET))
+
+    retransform = False
+    for rnd in range(1, args.rounds + 1):
+        bad = []
+        cat = Counter()
+        samples = defaultdict(list)
+        undeclared = defaultdict(list)   # name -> [(path, line)]
+        with cf.ThreadPoolExecutor(max_workers=args.jobs) as ex:
+            for path, errs in ex.map(syntax_check, [(f, ndk) for f in files]):
+                if errs:
+                    bad.append(path)
+                    for ln, msg in errs:
+                        cat[msg] += 1
+                        if len(samples[msg]) < 3:
+                            samples[msg].append(
+                                "%s:%d" % (os.path.relpath(path, SRC), ln))
+                        for n in UNDECLARED_RE.findall(msg):
+                            undeclared[n].append((path, ln))
+        print()
+        print("--- round %d ---" % rnd)
+        print("clean   : %d/%d" % (len(files) - len(bad), len(files)))
+        print("errors  : %d in %d files" % (sum(cat.values()), len(bad)))
+
+        unknown = set()
+        members = defaultdict(set)
+        for msg in cat:
+            unknown.update(UNKNOWN_TYPE_RE.findall(msg))
+            for field, struct_name in NO_MEMBER_RE.findall(msg):
+                members[struct_name].add(field)
+
+        # classify the undeclared identifiers by how they are used. A single
+        # call site is enough to make it a function: declaring a function that
+        # is also read as a value still compiles, but declaring a variable that
+        # is then called does not.
+        type_like, func_like, obj_like = set(), set(), set()
+        for name, hits in undeclared.items():
+            if name in C_KEYWORDS:
+                continue
+            kinds = Counter()
+            if CODE_NAME_RE.match(name):
+                func_like.add(name)
+                continue
+            for path, ln in hits[:64]:
+                src = read_line(path, ln)
+                if re.search(r"\b%s\s*\(" % re.escape(name), src):
+                    kinds["f"] += 1
+                elif re.search(r"\b%s\b\s*(?:\*|&|[A-Za-z_]\w*\s*[;,)\]=\[])"
+                               % re.escape(name), src):
+                    kinds["t"] += 1
+                else:
+                    kinds["o"] += 1
+            if kinds["f"]:
+                func_like.add(name)
+            elif kinds["t"] and not kinds["o"]:
+                type_like.add(name)
+            else:
+                obj_like.add(name)
+
+        n_types = add_types(unknown | type_like)
+        n_obj, n_func = add_externs(obj_like, func_like)
+        n_members = add_members(members)
+        if n_types:
+            retransform = True
+        print("new types: %d   new objects: %d   new functions: %d   new members: %d"
+              % (n_types, n_obj, n_func, n_members))
+        if n_types or n_obj or n_func or n_members:
+            if rnd < args.rounds:
+                continue
+
+        print("top diagnostics:")
+        for msg, c in cat.most_common(args.report):
+            print("  %6d  %s" % (c, msg))
+            for s in samples[msg]:
+                print("            %s" % s)
+        break
+
+    print()
+    print("retransform: %s" % ("yes" if retransform else "no"))
+    return 0
+
+
+if __name__ == "__main__":
+    sys.exit(main())

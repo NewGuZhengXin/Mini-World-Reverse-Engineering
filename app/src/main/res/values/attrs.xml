@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <attr name="metaButtonBarStyle" format="reference" />
+    <attr name="metaButtonBarButtonStyle" format="reference" />
+
+    <!--
+      apktool drops declare-styleable blocks whose attributes are also declared
+      standalone, but the original classes.dex contains
+      R.styleable.ButtonBarContainerTheme (used by the FullscreenTheme style),
+      so it is restored here.
+    -->
+    <declare-styleable name="ButtonBarContainerTheme">
+        <attr name="metaButtonBarStyle" />
+        <attr name="metaButtonBarButtonStyle" />
+    </declare-styleable>
+</resources>

@@ -1,0 +1,394 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<Ui>
+	<Script file="ui/mobile/playmain.lua"/>
+	<Frame name="PlayMainFrame" parent="UIClient" frameStrata="BACKGROUND" input_transparent="true" hidden="true" framelevel="1">
+		<Frames>
+			<Frame name="PlayShortcut">
+				<Size>
+					<AbsDimension x="592" y="100"/>
+				</Size>
+				<Anchors>
+					<Anchor point="bottom" relativePoint="bottom" relativeTo="$parent">
+						<Offset>
+							<AbsDimension x="0" y="0" />
+						</Offset>
+					</Anchor>
+				</Anchors>
+				<Layers>
+					<Layer level="BACKGROUND">
+						<Texture name="$parentBkg" file="ui/mobile/ui.png" x="547" y="175" w="474" h="81">
+							<Size>
+								<AbsDimension x="592" y="100"/>
+							</Size>
+						</Texture>
+					</Layer>
+				</Layers>
+				<Frames>
+					<Button name="ToolShortcut1" inherits="MItemButtonTemplate" id="1001"/>
+					<Button name="ToolShortcut2" inherits="MItemButtonTemplate" id="1002"/>
+					<Button name="ToolShortcut3" inherits="MItemButtonTemplate" id="1003"/>
+					<Button name="ToolShortcut4" inherits="MItemButtonTemplate" id="1004"/>
+					<Button name="ToolShortcut5" inherits="MItemButtonTemplate" id="1005"/>
+					<Button name="ToolShortcut6" inherits="MItemButtonTemplate" id="1006"/>
+				</Frames>
+				<Scripts>
+					<OnLoad>PlayShortcut_OnLoad();</OnLoad>
+					<OnEvent>PlayShortcut_OnEvent();</OnEvent>
+					<OnUpdate>PlayShortcut_OnUpdate();</OnUpdate>
+				</Scripts>
+			</Frame>
+			<IconBar name="PlayerHPBar" iconnum="10" direction="0" icontexture="ui/mobile/ui.png" bgicon="0" quantityicon1="1" quantityicon2="1" quantityicon3="1" quantityicon4="2">
+				<Size>
+					<AbsDimension x="331" y="34"/>
+				</Size>
+				<Anchors>
+					<Anchor point="bottomleft" relativePoint="topleft" relativeTo="PlayShortcut">
+						<Offset>
+							<AbsDimension x="0" y="-3" />
+						</Offset>
+					</Anchor>
+				</Anchors>
+				<Icon id="0" x="457" y="68" w="23" h="22"/>
+				<Icon id="1" x="432" y="68" w="22" h="22"/>
+				<Icon id="2" x="409" y="68" w="22" h="22"/>
+				<Scripts>
+					<OnLoad>PlayHPBar_OnLoad();</OnLoad>
+					<OnShow>PlayHPBar_OnShow();</OnShow>
+					<OnEvent>PlayHPBar_OnEvent();</OnEvent>
+				</Scripts>
+			</IconBar>
+			<Frame name="PlayerExpBar">
+				<Size>
+					<AbsDimension x="203" y="41"/>
+				</Size>
+				<Anchors>
+					<Anchor point="bottomright" relativePoint="topright" relativeTo="PlayShortcut">
+						<Offset>
+							<AbsDimension x="35" y="-3" />
+						</Offset>
+					</Anchor>
+				</Anchors>
+				<Layers>
+					<Layer level="BACKGROUND">
+						<Texture name="$parentStar" file="ui/mobile/ui.png" x="682" y="70" w="26" h="26">
+							<Size>
+								<AbsDimension x="41" y="41"/>
+							</Size>
+						</Texture>
+						<FontString name="$parentText" fonttype="BlackFont24" text="12345678">
+							<Color r="215" g="244" b="0"/>
+							<Size>
+								<AbsDimension x="156" y="24"/>
+							</Size>
+							<Anchors>
+								<Anchor point="left" relativeTo="$parentStar" relativePoint="right">
+									<Offset>
+										<AbsDimension x="6" y="0" />
+									</Offset>
+								</Anchor>
+							</Anchors>
+						</FontString>
+					</Layer>
+				</Layers>
+			</Frame>
+			<Frame name="TaskTrackFrame" hidden="true">
+				<Size>
+					<AbsDimension x="400" y="60"/>
+				</Size>
+				<Anchors>
+					<Anchor point="topleft" relativePoint="topleft" relativeTo="$parent">
+						<Offset>
+							<AbsDimension x="20" y="10" />
+						</Offset>
+					</Anchor>
+				</Anchors>
+				<Layers>
+					<Layer level="BACKGROUND">
+						<FontString name="$parentTitle" fonttype="BlackFont24" lineInterval="2" text="任务目标：" fontStyle="border">
+							<Color r="255" g="221" b="179"/>
+							<Size>
+								<AbsDimension x="400" y="25"/>
+							</Size>
+							<Anchors>
+								<Anchor point="topleft" relativePoint="topleft" relativeTo="$parent">
+									<Offset>
+										<AbsDimension x="0" y="0"/>
+									</Offset>
+								</Anchor>
+							</Anchors>
+						</FontString>
+					</Layer>
+				</Layers>
+				<Frames>
+					<RichText name="$parentDesc" lineInterval="2" multiLine="false" fonttype="BlackFont24" fontStyle="border">
+						<Size>
+							<AbsDimension x="400" y="25"/>
+						</Size>
+						<Anchors>
+							<Anchor point="topleft" relativePoint="bottomleft" relativeTo="$parentTitle">
+								<Offset>
+									<AbsDimension x="0" y="15"/>
+								</Offset>
+							</Anchor>
+						</Anchors>
+					</RichText>
+				</Frames>
+				<Scripts>
+					<OnShow>TaskTrackFrame_OnShow();</OnShow>
+				</Scripts>
+			</Frame>
+			<Button name="$parentUse">
+				<Size>
+					<AbsDimension x="102" y="102"/>
+				</Size>
+				<Anchors>
+					<Anchor point="bottomright" relativeTo="$parent" relativePoint="bottomright">
+						<Offset>
+							<AbsDimension x="-40" y="-38" />
+						</Offset>
+					</Anchor>
+				</Anchors>
+				<NormalTexture name="$parentNormal" file="ui/mobile/ui.png" x="486" y="93" w="80" h="80">
+					<Size>
+						<AbsDimension x="102" y="102"/>
+					</Size>
+				</NormalTexture>
+				<PushedTexture name="$parentPushed" file="ui/mobile/ui.png" x="569" y="93" w="80" h="80">
+					<Size>
+						<AbsDimension x="102" y="102"/>
+					</Size>
+				</PushedTexture>
+				<Scripts>
+					<OnMouseDown>PlayMainFrameUseBtn_OnMouseDown()</OnMouseDown>
+					<OnMouseUp>PlayMainFrameUseBtn_OnMouseUp()</OnMouseUp>
+				</Scripts>
+			</Button>
+			<Button name="$parentJump">
+				<Size>
+					<AbsDimension x="102" y="102"/>
+				</Size>
+				<Anchors>
+					<Anchor point="bottom" relativeTo="$parentUse" relativePoint="top">
+						<Offset>
+							<AbsDimension x="0" y="-58" />
+						</Offset>
+					</Anchor>
+				</Anchors>
+				<Layers>
+					<Layer level="overlay">
+						<Texture name="$parentUVAnimationTex" file="ui/mobile/effect/ui_button_2.png" hidden="true">
+							<Size>
+								<AbsDimension x="140" y="140"/>
+							</Size>
+							<Anchors>
+								<Anchor point="center" relativePoint="center" relativeTo="$parent">
+									<Offset>
+										<AbsDimension x="0" y="0"/>
+									</Offset>
+								</Anchor>
+							</Anchors>	
+							<UVAnimation texrows="2" texcols="4" />
+						</Texture>
+					</Layer>
+				</Layers>
+				<NormalTexture name="$parentNormal" file="ui/mobile/ui.png" x="323" y="93" w="80" h="80"/>
+				<PushedTexture name="$parentPushed" file="ui/mobile/ui.png" x="405" y="93" w="80" h="80"/>
+				<Scripts>
+					<OnClick>PlayMainFrameJumpBtn_OnClick();</OnClick>
+				</Scripts>
+			</Button>
+			<Button name="$parentSneak">
+				<Size>
+					<AbsDimension x="90" y="89"/>
+				</Size>
+				<Anchors>
+					<Anchor point="bottomleft" relativeTo="$parent" relativePoint="bottomleft">
+						<Offset>
+							<AbsDimension x="3" y="-3" />
+						</Offset>
+					</Anchor>
+				</Anchors>
+				<NormalTexture name="$parentWalk" file="ui/mobile/ui.png" x="471" y="3" w="54" h="56" />
+				<CheckedTexture name="$parentSneak" file="ui/mobile/ui.png" x="410" y="3" w="55" h="56" />
+				<Scripts>
+					<OnClick>PlayMainFrameSneakBtn_OnClick();</OnClick>
+				</Scripts>
+			</Button>
+			<Button name="$parentFly">
+				<Size>
+					<AbsDimension x="90" y="89"/>
+				</Size>
+				<Anchors>
+					<Anchor point="bottomleft" relativeTo="$parent" relativePoint="bottomleft">
+						<Offset>
+							<AbsDimension x="3" y="-3" />
+						</Offset>
+					</Anchor>
+				</Anchors>
+				<NormalTexture name="$parentFly" file="ui/mobile/ui2.png" x="896" y="224" w="60" h="58" />
+				<CheckedTexture name="$parentLanding" file="ui/mobile/ui2.png" x="959" y="222" w="60" h="58" />
+				<Scripts>
+					<OnClick>PlayMainFrameFlyBtn_OnClick();</OnClick>
+				</Scripts>
+			</Button>
+			<Button name="$parentFlyDown" hidden="true">
+				<Size>
+					<AbsDimension x="90" y="90"/>
+				</Size>
+				<Anchors>
+					<Anchor point="bottom" relativeTo="$parentFly" relativePoint="top">
+						<Offset>
+							<AbsDimension x="0" y="-15" />
+						</Offset>
+					</Anchor>
+				</Anchors>
+				<NormalTexture name="$parentNormal" file="ui/mobile/ui2.png" x="775" y="231" w="60" h="60" />
+				<PushedTexture name="$parentPushedBG" file="ui/mobile/ui2.png" x="839" y="235" w="53" h="52">
+					<Size>
+						<AbsDimension x="80" y="79" />
+					</Size> 
+				</PushedTexture>
+				<Scripts>
+					<OnMouseUp>PlayMainFrameFlyDown_OnMouseUp();</OnMouseUp>
+					<OnMouseDown>PlayMainFrameFlyDown_OnMouseDown();</OnMouseDown>
+					<OnClick>PlayMainFrameFlyDown_OnClick();</OnClick>
+				</Scripts>
+			</Button>
+			<Button name="$parentFlyUp" hidden="true">
+				<Size>
+					<AbsDimension x="90" y="89"/>
+				</Size>
+				<Anchors>
+					<Anchor point="bottom" relativeTo="$parentFlyDown" relativePoint="top">
+						<Offset>
+							<AbsDimension x="0" y="-15" />
+						</Offset>
+					</Anchor>
+				</Anchors>
+				<NormalTexture name="$parentNormal" file="ui/mobile/ui2.png" x="655" y="231" w="60" h="60" />
+				<PushedTexture name="$parentPushedBG" file="ui/mobile/ui2.png" x="719" y="235" w="52" h="52" >
+					<Size>
+						<AbsDimension x="79" y="79" />
+					</Size> 
+				</PushedTexture>
+				<Scripts>
+					<OnMouseUp>PlayMainFrameFlyUp_OnMouseUp();</OnMouseUp>
+					<OnMouseDown>PlayMainFrameFlyUp_OnMouseDown();</OnMouseDown>
+					<OnClick>PlayMainFrameFlyUp_OnClick();</OnClick>
+				</Scripts>
+			</Button>			
+			<Button name="$parentSetting">
+				<Size>
+					<AbsDimension x="60" y="60"/>
+				</Size>
+				<Anchors>
+					<Anchor point="topright" relativeTo="$parent" relativePoint="topright">
+						<Offset>
+							<AbsDimension x="-9" y="9" />
+						</Offset>
+					</Anchor>
+				</Anchors>
+				<NormalTexture name="$parentNormal" file="ui/mobile/ui.png" x="653" y="3" w="60" h="60">
+					<Size>
+						<AbsDimension x="60" y="60"/>
+					</Size>
+				</NormalTexture>
+				<PushedTexture name="$parentPushed" file="ui/mobile/ui.png" x="714" y="3" w="60" h="60">
+					<Size>
+						<AbsDimension x="60" y="60"/>
+					</Size>
+				</PushedTexture>
+				<Scripts>
+					<OnClick>PlayMainFrameSettingBtn_OnClick();</OnClick>
+				</Scripts>
+			</Button>
+			<Button name="$parentBackpack">
+				<Size>
+					<AbsDimension x="79" y="79"/>
+				</Size>
+				<Anchors>
+					<Anchor point="topleft" relativeTo="PlayShortcut" relativePoint="topleft">
+						<Offset>
+							<AbsDimension x="510" y="13" />
+						</Offset>
+					</Anchor>
+				</Anchors>
+				<Layers>
+					<Layer level="overlay">
+						<Texture name="$parentUVAnimationTex" file="ui/mobile/effect/ui_button_1.png" hidden="true">
+							<Size>
+								<AbsDimension x="120" y="120"/>
+							</Size>
+							<Anchors>
+								<Anchor point="center" relativePoint="center" relativeTo="$parent">
+									<Offset>
+										<AbsDimension x="0" y="0"/>
+									</Offset>
+								</Anchor>
+							</Anchors>	
+							<UVAnimation texrows="2" texcols="4" />
+						</Texture>
+					</Layer>
+				</Layers>
+				<NormalTexture name="$parentNormal" file="ui/mobile/ui.png" x="534" y="3" w="62" h="62" />
+				<PushedTexture name="$parentPushed" file="ui/mobile/ui.png" x="596" y="3" w="60" h="60" />
+				<Scripts>
+					<OnClick>PlayMainFrameBackpackBtn_OnClick();</OnClick>
+				</Scripts>
+			</Button>
+			<Button name="$parentVip">
+				<Size>
+					<AbsDimension x="120" y="93"/>
+				</Size>
+				<Anchors>
+					<Anchor point="right" relativeTo="$parentSetting" relativePoint="left">
+						<Offset>
+							<AbsDimension x="-10" y="0" />
+						</Offset>
+					</Anchor>
+				</Anchors>
+				<NormalTexture name="$parentNormal" file="ui/mobile/ui.png" x="927" y="3" w="96" h="76">
+					<Size>
+						<AbsDimension x="120" y="93"/>
+					</Size>
+				</NormalTexture>
+				<PushedTexture name="$parentPushed" file="ui/mobile/ui.png" x="927" y="3" w="96" h="76">
+					<Size>
+						<AbsDimension x="120" y="93"/>
+					</Size>
+				</PushedTexture>
+				<Scripts>
+					<OnClick>PlayMainFrameVipBtn_OnClick();</OnClick>
+				</Scripts>
+			</Button>
+			<Button name="$parentAchievement">
+				<Size>
+					<AbsDimension x="60" y="85"/>
+				</Size>
+				<Anchors>
+					<Anchor point="top" relativeTo="$parentSetting" relativePoint="bottom">
+						<Offset>
+							<AbsDimension x="0" y="15" />
+						</Offset>
+					</Anchor>
+				</Anchors>
+				<NormalTexture name="$parentNormal" file="ui/mobile/ui1.png" x="971" y="682" w="53" h="75">
+					<Size>
+						<AbsDimension x="60" y="85"/>
+					</Size>
+				</NormalTexture>
+				<PushedTexture name="$parentPushed" file="ui/mobile/ui1.png" x="971" y="682" w="53" h="75">
+					<Size>
+						<AbsDimension x="60" y="85"/>
+					</Size>
+				</PushedTexture>
+				<Scripts>
+					<OnClick>PlayMainFrameAchievementBtn_OnClick();</OnClick>
+				</Scripts>
+			</Button>
+		</Frames>
+		<Scripts>
+			<OnShow>PlayMainFrame_OnShow();</OnShow>
+		</Scripts>
+	</Frame>
+</Ui>

@@ -1,0 +1,39 @@
+
+local t_type = {
+		{ iconPath = "ui/mobile/ui1.png", uv={x=823,y=163,w=66,h=67}, leftNamePath = "ui/mobile/ui.png", leftUv={x=893,y=830,w=61,h=33}, rightNamePath = "ui/mobile/ui.png", rightUv = {x=961,y=830,w=60,h=33}}, --删除
+	}
+
+function MessageBox(type, note)
+	if type > #t_type then return; end
+
+	MessageBoxFrame:SetClientString("");
+	MessageBoxFrameDesc:clearHistory();
+
+	MessageBoxFrameIcon:SetTexture(t_type[type].iconPath);
+	MessageBoxFrameIcon:SetTexUV(t_type[type].uv.x, t_type[type].uv.y, t_type[type].uv.w, t_type[type].uv.h);	
+	MessageBoxFrameLeftBtnName:SetTexture(t_type[type].leftNamePath);
+	MessageBoxFrameLeftBtnName:SetTexUV(t_type[type].leftUv.x, t_type[type].leftUv.y, t_type[type].leftUv.w, t_type[type].leftUv.h);	
+	MessageBoxFrameRightBtnName:SetTexture(t_type[type].rightNamePath);
+	MessageBoxFrameRightBtnName:SetTexUV(t_type[type].rightUv.x, t_type[type].rightUv.y, t_type[type].rightUv.w, t_type[type].rightUv.h);
+
+	MessageBoxFrameDesc:SetText(note, 255, 230, 67);
+	MessageBoxFrame:Show();
+end
+
+function MessageBoxFrameLeftBtn_OnClick()
+	if MessageBoxFrame:GetClientString() == "删除地图" then
+		local n = MessageBoxFrame:GetClientUserData(0);
+		if n > 0 then
+			--调用删除存档接口
+			local worldInfo = AccountManager:getMyWorldList():getWorldDesc(n-1);
+			AccountManager:requestDeleteWorld(
+		end
+	end
+	MessageBoxFrame:Hide();
+end
+
+function MessageBoxFrameRightBtn_OnClick()
+	if MessageBoxFrame:GetClientString() == "删除地图" then
+	end
+	MessageBoxFrame:Hide();
+end

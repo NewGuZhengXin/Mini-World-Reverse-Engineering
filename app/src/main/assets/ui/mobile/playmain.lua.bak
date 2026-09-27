@@ -1,0 +1,279 @@
+
+MAX_SHORTCUT = 6
+ShortCut_SelectedIndex = -1
+
+t_allFrame =  {"BackpackFrame", "StorageBoxFrame", "FurnaceFrame", "RepairFrame", "CraftingTableFrame", "FriendFrame", "AchievementFrame"}
+function HideAllFrame(frameName)
+	for i=1, #(t_allFrame) do		
+		if t_allFrame[i] ~= frameName then
+			local frame = getglobal(t_allFrame[i]);
+			if frame:IsShown() then
+				frame:Hide();
+			end
+		end
+	end
+end
+
+function PlayShortcut_OnLoad()
+	this:RegisterEvent("GE_BACKPACK_CHANGE");
+	this:RegisterEvent("GE_SHORTCUT_SELECTED");
+
+	for i=1,MAX_SHORTCUT do
+		local ShortcutBtn = getglobal("ToolShortcut"..i);
+		local x = 10 + (i-1)*82;
+		local x = math.floor(413*(i-1)/5) + 10;
+		ShortcutBtn:SetPoint("TOPLEFT", "PlayShortcut", "TOPLEFT", x, 6);
+	end
+end
+
+function PlayShortcut_OnUpdate()
+	if not BackpackFramePackFrame:IsShown() then
+		return;
+	end
+	if selectBackpackGrid < 0 or selectBackpackGrid < SHORTCUT_START_INDEX or selectBackpackGrid > SHORTCUT_START_INDEX + 1000 then
+		return
+	end
+--[[
+	local index  = selectBackpackGrid - SHORTCUT_START_INDEX + 1;
+	local selbox = getglobal("ToolShortcut"..index.."ContentBoxTexture");
+	shortcutBoxDisplayTime = shortcutBoxDisplayTime - arg1
+	if shortcutBoxDisplayTime > 0 then		
+		if selbox:IsShown() then
+			selbox:Hide();
+		else
+			selbox:Show()
+		end
+	else
+		selbox:Show();
+	end
+--]]
+end
+
+function ShortCutFrame_UpdateOneGrid(grid_index)
+	local n = grid_index+1;
+	if grid_index >= SHORTCUT_START_INDEX then
+		n = n - SHORTCUT_START_INDEX
+	end
+
+	local ShortcutBtn = getglobal("ToolShortcut"..n);
+	local ShortcutIcon = getglobal("ToolShortcut"..n.."ContentIcon");
+	local ShortcutNum = getglobal("ToolShortcut"..n.."ContentCount");
+	local durbar = getglobal("ToolShortcut"..n.."ContentDuration");
+
+	UpdateItemIconCount(ShortcutIcon, ShortcutNum, durbar, grid_index);
+	if n-1 == ShortCut_SelectedIndex then
+		ClientCurGame:setCurToolID(ClientBackpack:getGridItem(grid_index));
+	end
+end
+
+function ShortCutFrame_UpdateAllGrids()
+	for i=0, 5, 1 do
+		ShortCutFrame_UpdateOneGrid(SHORTCUT_START_INDEX+i)
+	end
+end
+
+function ShortCutFrame_Selected(index)
+	if BackpackFramePackFrame:IsShown() then
+		return;
+	end
+
+	if ShortCut_SelectedIndex >= 0 then
+		local selbox = getglobal("ToolShortcut"..(ShortCut_SelectedIndex+1).."ContentBoxTexture1");
+		selbox:Hide()
+--		local uv = getglobal("ToolShortcut"..(ShortCut_SelectedIndex+1).."ContentUVAnimationTex")
+--		uv:Hide();
+	end
+
+	ShortCut_SelectedIndex = index;
+
+	local selbox = getglobal("ToolShortcut"..(ShortCut_SelectedIndex+1).."ContentBoxTexture1");
+	selbox:Show();
+--	local uv = getglobal("ToolShortcut"..(ShortCut_SelectedIndex+1).."ContentUVAnimationTex")
+--	uv:SetUVAnimation(150, true);
+--	uv:Show();
+end
+
+function HideShortCutAllItemBoxTexture()
+	for i=1, 6 do
+		local boxTexture = getglobal("ToolShortcut"..i.."ContentBoxTexture");
+		boxTexture:Hide();
+	end
+end
+
+function PlayShortcut_OnEvent()
+	local ge = GameEventQue:getCurEvent();
+
+	if arg1 == "GE_BACKPACK_CHANGE" then
+		local grid_index = ge.body.backpack.grid_index;
+		if grid_index>=SHORTCUT_START_INDEX and grid_index<SHORTCUT_START_INDEX+1000 then
+			ShortCutFrame_UpdateOneGrid(grid_index);
+		elseif grid_index < 0 then
+			ShortCutFrame_UpdateAllGrids();
+		end
+	elseif arg1 == "GE_SHORTCUT_SELECTED" then
+		ShortCutFrame_Selected(ge.body.shortcut.selectgrid);
+	end
+end
+
+function PlayHPBar_OnLoad()
+	this:RegisterEvent("GE_PLAYERATTR_CHANGE")
+end
+
+function PlayHPBar_OnShow()
+end
+
+function PlayHPBar_OnEvent()
+	if arg1 == "GE_PLAYERATTR_CHANGE" then
+		PlayerHPBar:SetCurValue(MainPlayerAttrib:getHP()/MainPlayerAttrib:getMaxHP(), false)
+	end
+end
+
+function PlayMainFrameUseBtn_OnMouseDown()
+	if arg1 == VK_LBUTTON then
+		PlayMainFrameUseUVAnimationTex:SetUVAnimation(20, true);
+		PlayMainFrameUseUVAnimationTex:Show();
+		CurMainPlayer:setUseItem(true)
+	end
+end
+
+function PlayMainFrameUseBtn_OnMouseUp()
+	if arg1 == VK_LBUTTON then
+		PlayMainFrameUseUVAnimationTex:Hide();
+		CurMainPlayer:setUseItem(false)
+	end
+end
+
+function PlayMainFrameJumpBtn_OnMouseDown()
+	PlayMainFrameJumpUVAnimationTex:SetUVAnimation(20, true);
+	PlayMainFrameJumpUVAnimationTex:Show();
+	CurMainPlayer:setJumping(true);	
+end
+
+function PlayMainFrameJumpBtn_OnMouseUp()
+	PlayMainFrameJumpUVAnimationTex:Hide();
+	CurMainPlayer:setJumping(false)
+end
+
+function PlayMainFrameSneakBtn_OnClick()
+end
+
+function PlayMainFrameFlyBtn_OnClick()
+	if PlayMainFrameFlyDown:IsShown() then
+		PlayMainFrameFlyDown:Hide();
+		CurMainPlayer:setFlyMode(false);
+	else
+		PlayMainFrameFlyDown:Show();		
+		CurMainPlayer:setFlyMode(true);
+	end
+	
+	if PlayMainFrameFlyUp:IsShown() then
+		PlayMainFrameFlyUp:Hide()
+	else
+		PlayMainFrameFlyUp:Show()
+	end
+end
+
+function PlayMainFrameFlyDown_OnMouseUp()
+	CurMainPlayer:cancelMoveUp(-1)
+end
+function PlayMainFrameFlyDown_OnMouseDown()
+	CurMainPlayer:setMoveUp(-1)
+end
+function PlayMainFrameFlyDown_OnClick()
+end
+
+function PlayMainFrameFlyUp_OnMouseUp()
+	CurMainPlayer:cancelMoveUp(1)
+end
+function PlayMainFrameFlyUp_OnMouseDown()
+	CurMainPlayer:setMoveUp(1)
+end
+function PlayMainFrameFlyUp_OnClick()
+end
+
+function PlayMainFrameSettingBtn_OnClick()
+	if ClientCurGame:getName() == "SurviveGame" then
+		if not GameOptionFrame:IsShown() then
+			GameOptionFrame:Show()
+			ClientCurGame:setOperateUI(true)
+		end
+	end
+end
+
+function PlayMainFrameBackpackBtn_OnClick()
+	if CurWorld:isCreativeMode() then
+		if CreateBackpackFrame:IsShown() then
+			CreateBackpackFrame:Hide();
+		else
+			CreateBackpackFrame:Show();
+			ClientCurGame:setOperateUI(true);
+		end
+	else
+		if BackpackFrame:IsShown() then
+			BackpackFrame:Hide();
+		else
+			BackpackFrame:Show();
+			ClientCurGame:setOperateUI(true);
+		end	
+	end
+end
+
+function PlayMainFrameVipBtn_OnClick()
+	EnchantFrame:Show();
+end
+
+function PlayMainFrameAchievementBtn_OnClick()
+	if AchievementFrame:IsShown() then
+		AchievementFrame:Hide();
+	else
+		AchievementFrameType = 1;
+		AchievementFrame:Show();
+		AchievementFrame:SetPoint("bottom", "PlayShortcut", "top", -30, 0);
+	end
+end
+
+function PlayMainFrame_OnShow()
+	PlayerHPBar:SetCurValue(MainPlayerAttrib:getHP()/MainPlayerAttrib:getMaxHP(), true)
+	--判断是否有追踪任务，显示追踪任务面板
+	if AchievementMgr:getCurTrackID() > 0 then -- and not 他人地图存档
+		TaskTrackFrame:Show();
+		UpdateTaskTrackFrame();
+	end
+	--判断是生存模式还是创造模式
+	if CurWorld:isCreativeMode() then
+		PlayMainFrameSneak:Hide();
+		PlayMainFrameFly:Show();	
+	else
+		PlayMainFrameFly:Hide();
+		PlayMainFrameSneak:Show();
+	end
+
+--	PlayMainFrameBackpackUVAnimationTex:SetUVAnimation(80, true);
+--	PlayMainFrameBackpackUVAnimationTex:Show();
+
+--	PlayMainFrameJumpUVAnimationTex:SetUVAnimation(80, true);
+--	PlayMainFrameJumpUVAnimationTex:Show();
+end
+
+-----------------------------------------------------TaskTrackFrame---------------------------------------------
+function TaskTrackFrame_OnShow()
+end
+
+function UpdateTaskTrackFrame()
+	local achievementId = AchievementMgr:getCurTrackID();
+	local achievementDef = DefMgr:getAchievementDef(achievementId);
+
+	if achievementId > 0 and achievementDef ~= nil then
+		TaskTrackFrame:Show();	
+		local num = achievementDef.GoalNum;
+		local arryNum = AchievementMgr:getAchievementArryNum(achievementDef.ID);
+		local szText = achievementDef.TrackDesc.."#n("..arryNum.."/"..num..")";
+		if arryNum >= num then	
+			szText = achievementDef.TrackDesc.."#n(已完成)";
+			AchievementFinishTipsFrame:Show();
+		end
+		TaskTrackFrameDesc:SetText(szText, 255, 255, 255);
+	else
+		TaskTrackFrame:Hide();
+	end
+end

@@ -1,0 +1,18 @@
+
+function LoadingFrame_OnLoad()
+	this:RegisterEvent("GE_LOAD_PROGRESS");
+	this:RegisterEvent("GE_LOAD_COMPLETE,");
+end
+
+function LoadingFrame_OnEvent()
+	local ge = GameEventQue:getCurEvent();
+
+	if arg1 == "GE_LOAD_PROGRESS" then
+		local value = ge.body.loadprogress.progress/100;
+		LoadingFrameLoadProgressBar:SetValue(value);
+	end
+	if arg1 == "GE_LOAD_COMPLETE" then
+		LoadingFrameLoadProgressBar:SetValue(1);
+		LoadingFrame:Hide();		
+	end
+end

@@ -1,0 +1,274 @@
+ARCHIVE_MAX = 6;
+SelectArchiveIndex = 0;
+
+function Content_OnClick()
+	local parent = this:GetParentFrame()
+	if parent ~= nil and parent:GetParent() ~= nil then
+		SetHightLightArchiveBtn(parent:GetParent());
+	end
+end
+
+function LobbyFrame_OnShow()
+	local player = ClientCurGame:getSelectRole(SelectRoleIndex);
+	player:attachUIModelView(LobbyFrameRoleView);
+	LobbyFrameRoleView:playActorAnim(100100,0);
+
+	local n = SelectRoleIndex + 1;
+	LobbyFrameHeadBtnIcon:SetTexture("ui/roleicons/"..n..".png");
+
+	UpdateArchive();
+--	SetHightLightArchiveBtn("ArchiveBtn1");
+	
+	local text = "魔里的生存世界";
+	ArchiveBtn1SlidingFrameContentName:SetText(text, 255, 230, 67);
+	ArchiveBtn1SlidingFrameContentName:SetShadowColor(0,0,0);
+
+	if ArchiveBtn1SlidingFrameContentName:GetTextLines() > 1 then
+		ArchiveBtn1SlidingFrameContentName:SetPoint("left", "ArchiveBtn1SlidingFrameContentModelIcon", "right", 10, 10);
+	else
+		ArchiveBtn1SlidingFrameContentName:SetPoint("left", "ArchiveBtn1SlidingFrameContentModelIcon", "right", 10, 27);
+	end
+
+	if AccountManager:getMyWorldList():getNumWorld() == 0 then
+		--"创建新的世界" 按钮闪烁
+	end
+end
+
+function UpdateArchive()
+	local archiveNum = ARCHIVE_MAX;
+--[[
+	if 不是vip then
+		archiveNum = 3
+	end
+--]]
+
+	ArchiveBoxPlane:SetSize(588,archiveNum*(134+archiveNum));
+	for i=1, ARCHIVE_MAX do 
+		local archiveBtn 	= getglobal("ArchiveBtn"..i);
+		local slidingFrame 	= getglobal("ArchiveBtn"..i.."SlidingFrame");
+		local shareIcon 	= getglobal("ArchiveBtn"..i.."ShareIcon");
+		local bkg		= getglobal("ArchiveBtn"..i.."Bkg");
+
+		if i < archiveNum then
+			archiveBtn:Show();
+			if i <= AccountManager:getMyWorldList():getNumWorld() then
+				bkg:Hide();
+				UpdateArchiveBtnInfo(i);
+				slidingFrame:Show();
+			else
+				slidingFrame:Hide();
+				shareIcon:Hide();
+				slidingFrame:resetOffsetPos();
+				bkg:Show();
+			end
+		else
+			archiveBtn:Hide();
+		end
+	end
+	
+end
+
+function SetHightLightArchiveBtn(btnName)
+	local archive = getglobal(btnName);
+	SelectArchiveIndex = archive:GetClientID();
+
+	for i=1,AccountManager:getMyWorldList():getNumWorld() do
+		local worldInfo = AccountManager:getMyWorldList():getWorldDesc(i-1);
+
+		local shareIcon = getglobal("ArchiveBtn"..i.."ShareIconNormal");
+		local modelIcon = getglobal("ArchiveBtn"..i.."SlidingFrameContentModelIcon");
+		local nameRich	= getglobal("ArchiveBtn"..i.."SlidingFrameContentName");
+		local headIcon 	= getglobal("ArchiveBtn"..i.."SlidingFrameContentHeadIcon");
+		local timeFont	= getglobal("ArchiveBtn"..i.."SlidingFrameContentTime");
+		
+		shareIcon:SetGray(true);
+		modelIcon:SetGray(true);
+		headIcon:SetGray(true);
+		nameRich:SetTextColor(worldInfo.worldname, 96, 96, 96);
+		timeFont:SetTextColor(96,96,96);
+	end
+
+	local worldInfo = AccountManager:getMyWorldList():getWorldDesc(SelectArchiveIndex-1);
+
+	local shareIcon = getglobal(btnName.."ShareIconNormal");
+	local modelIcon = getglobal(btnName.."SlidingFrameContentModelIcon");
+	local nameRich	= getglobal(btnName.."SlidingFrameContentName");
+	local headIcon 	= getglobal(btnName.."SlidingFrameContentHeadIcon");
+	local timeFont	= getglobal(btnName.."SlidingFrameContentTime");
+
+	shareIcon:SetGray(false);
+	modelIcon:SetGray(false);
+	headIcon:SetGray(false);
+	nameRich:SetTextColor(worldInfo.worldname, 255, 230, 67);
+	timeFont:SetTextColor(255,230,67);
+end
+
+function UpdateArchiveBtnInfo(index)
+--[[
+	for i=1, AccountManager:getMyWorldList():getNumWorld() then
+		if AccountManager:getMyWorldList():getNumWorld() <= ARCHIVE_MAX then 
+]]
+			local worldInfo = AccountManager:getMyWorldList():getWorldDesc(index-1);
+
+			local shareIcon = getglobal("ArchiveBtn"..index.."ShareIconNormal");
+			local modelIcon = getglobal("ArchiveBtn"..index.."SlidingFrameContentModelIcon");
+			local nameRich 	= getglobal("ArchiveBtn"..index.."SlidingFrameContentName");
+			local headIcon 	= getglobal("ArchiveBtn"..index.."SlidingFrameContentHeadIcon");
+			local timeFont	= getglobal("ArchiveBtn"..index.."SlidingFrameContentTime");
+
+			if worldInfo.isopen then
+				shareIcon:Show();
+			else
+				shareIcon:Hide();
+			end
+
+			local time = "";
+			if worldInfo.worldtype == 0 then
+				modelIcon:SetTexUV(822, 84, 76, 76);
+				time = time.."世界探索";
+			elseif worldInfo.worldtype == 1 then
+				modelIcon:SetTexUV(901, 84, 76, 76);
+				time = time.."创造世界";
+			end
+
+			local name = worldInfo.worldname;
+			nameRich:SetText(text, 255, 230, 67);
+			nameRich:SetShadowColor(0,0,0);
+			if nameRich:GetTextLines() >  1 then
+				nameRich:SetPoint("left", modelIcon:GetName(), "right", 10, 10);
+			else
+				nameRich:SetPoint("left", modelIcon:GetName(), "right", 10, 27);
+			end
+			
+			local h = AccountManager:getRoleIcon(index);
+			headIcon:SetTextureHuires(h);
+			timeFont:SetText(time.."："..UnixTime2Str(worldInfo.logintime));
+--[[
+		end
+	end
+]]
+end
+
+function LobbyFrame_OnUpdate()
+	ArchiveBtn1ShareIcon:SetPoint("center", "ArchiveBtn1SlidingFrameContent", "topleft", 10, 10);
+end
+
+function LobbyFrameCreateNewWorldBtn_OnClick()
+    MiniWorldCleanClickedEnter = true;
+    if BackgroundFrame ~= nil then BackgroundFrame:Show(); end
+    if LobbyFrameArchiveFrame ~= nil then LobbyFrameArchiveFrame:Hide(); end
+    if LobbyFrameMoreGame ~= nil then LobbyFrameMoreGame:Hide(); end
+    if LobbyFrameRoleInfo ~= nil then LobbyFrameRoleInfo:Hide(); end
+    if LobbyFrame ~= nil then LobbyFrame:Hide(); end
+    if GongNengFrame ~= nil then GongNengFrame:Hide(); end
+    if CreateWorldFrame ~= nil then CreateWorldFrame:Show(); end
+    CurShowFrameName = "CreateWorldFrame";
+end
+
+function LobbyFrameStartBtn_OnClick()
+    MiniWorldCleanClickedEnter = true;
+    MiniWorldCleanRoleSelected = true;
+    MiniWorldCleanStartOfflineWorld(0, "aaa");
+end
+
+function LobbyFrameCollectBtn_OnClick()
+end
+
+function LobbyFrameHeadBtn_OnClick()
+end
+
+function Delete_OnClick()
+	local clientId = this:GetParentFrame():GetClientID();
+	if clientId > 0 then
+		MessageBox(1,"确定要永久删除此地图吗？");
+		MessageBoxFrame:SetClientUserData(0,clientId);
+		MessageBoxFrame:SetClientString( "删除地图" );
+	end
+end
+
+function MainMenuStage_Enter()
+end
+
+function MainMenuStage_Quit()
+	LoginScreenFrame:Hide()
+end
+
+function SurviveGame_Enter()
+	PlayMainFrame:Show()
+end
+
+function SurviveGame_Quit()
+	PlayMainFrame:Hide()
+end
+
+
+-- MiniWorldCleanV3: main menu route and safe local-only buttons.
+function MainMenuStage_Enter()
+    if LoadingFrame ~= nil then LoadingFrame:Hide(); end
+    if BackgroundFrame ~= nil then BackgroundFrame:Hide(); end
+    if LobbyFrame ~= nil then LobbyFrame:Hide(); end
+    if MiniWorldCleanClickedEnter then
+        MiniWorldCleanShowLobby();
+    else
+        if LoginScreenFrame ~= nil then LoginScreenFrame:Show(); end
+    end
+end
+
+function MainMenuStage_Quit()
+    MiniWorldCleanHideMenuFrames();
+end
+
+function SurviveGame_Enter()
+    MiniWorldCleanHideMenuFrames();
+    if PlayMainFrame ~= nil then PlayMainFrame:Show(); end
+end
+
+function SurviveGame_Quit()
+    if PlayMainFrame ~= nil then PlayMainFrame:Hide(); end
+end
+
+function LobbyFrameCreateNewWorldBtn_OnClick()
+    MiniWorldCleanClickedEnter = true;
+    if LobbyFrame ~= nil then LobbyFrame:Hide(); end
+    if CreateWorldFrame ~= nil then CreateWorldFrame:Show(); end
+end
+
+function LobbyFrameStartBtn_OnClick()
+    MiniWorldCleanStartOfflineWorld(0, "aaa");
+end
+
+function GongNengFrameListFriendBtn_OnClick()
+    MiniWorldCleanOpenFriendFrame();
+end
+
+function LobbyFrameMoreGameBtn_OnClick()
+    if LobbyFrameMoreGame ~= nil and LobbyFrameMoreGame:IsShown() then
+        MiniWorldCleanShowLobby();
+    else
+        MiniWorldCleanOpenMoreGameFrame();
+    end
+end
+
+function LobbyFrameMoreGame_OnShow()
+    if GongNengFrame ~= nil then GongNengFrame:Show(); end
+    CurShowFrameName = "LobbyFrame";
+    if LobbyFrameMoreGameBtn ~= nil then LobbyFrameMoreGameBtn:Show(); end
+    if LobbyFrameMoreGameBtnName ~= nil then LobbyFrameMoreGameBtnName:SetText(" 返 回\n主界面"); end
+    if LobbyFrameMoreGameRankBtn ~= nil then LobbyFrameMoreGameRankBtn:Show(); end
+    if LobbyFrameMoreGameTypeBtn ~= nil then LobbyFrameMoreGameTypeBtn:Show(); end
+    if LobbyFrameMoreGameAttentionBtnName ~= nil then LobbyFrameMoreGameAttentionBtnName:SetText("本地列表"); end
+    if LoadLoopFrame ~= nil and LoadLoopFrame:IsShown() then LoadLoopFrame:Hide(); end
+    t_WatchOWWorld = {};
+    t_AttentionWathchOWorld = {};
+    t_LoadWathchOWWorld = {};
+    if UpdateMoreGameShareInfo ~= nil then UpdateMoreGameShareInfo(); end
+end
+
+function MoreGameSearchBtn_OnClick()
+    if ShowGameTips ~= nil then ShowGameTips("离线修复版不连接更多游戏服务器", 3); end
+end
+
+function UpdateWatchOw()
+    t_WatchOWWorld = {};
+    if UpdateMoreGameShareInfo ~= nil then UpdateMoreGameShareInfo(); end
+end

@@ -1,0 +1,23 @@
+# Gradle / Android build output
+.gradle/
+build/
+app/build/
+local.properties
+captures/
+.externalNativeBuild/
+.cxx/
+
+# Build artefacts
+*.apk
+*.aab
+*.ap_
+*.ids
+
+# IDE
+.idea/
+*.iml
+.DS_Store
+Thumbs.db
+
+# NOTE: keystore/restored.jks is committed on purpose - it is the throwaway
+# self-signed key this project's release build uses. Replace it if you fork.

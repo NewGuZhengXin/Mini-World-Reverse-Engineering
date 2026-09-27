@@ -1,0 +1,318 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<Ui>
+	<Script file="ui/mobile/uitemplate.lua" />
+	##Tips面板的背景
+	<Texture name="TipsBkgTemplate" virtual="true" file="ui/mobile/ui.png" DrawType="ninesquare">
+		<Size>
+			<RelDimension x="1.0" y="1.0"/>
+		</Size>
+		<Anchors>
+			<Anchor point="topleft" relativeTo="$parent" relativePoint="topleft">
+				<Offset>
+					<AbsDimension x="0" y="0"/>
+				</Offset>
+			</Anchor>
+		</Anchors>
+		<NineSquare>
+			<Topleft		x="879"	y="647"	w="48"	h="48"/>
+			<Top			x="927"	y="647"	w="48"  h="48"/>
+			<Topright		x="975"	y="647"	w="48"	h="48"/>
+			<Left			x="879"	y="695"	w="48"	h="48"/>
+			<Center			x="927" y="695"	w="48"	h="48"/>
+			<Right			x="975"	y="695"	w="48"	h="48"/>
+			<Bottomleft		x="879" y="743"	w="48"	h="48"/>
+			<Bottom			x="927"	y="743"	w="48"	h="48"/>
+			<Bottomright	x="975" y="743"	w="48"	h="48"/>
+			<OffSet x="48" y="48" />
+		</NineSquare>
+	</Texture>
+	
+	<Button name="PackLeftBtnTemplate" virtual="true">
+		<Size>
+			<AbsDimension x="68" y="76"/>
+		</Size>
+		<NormalTexture name="$parentNormal" file="ui/mobile/ui.png" x="88" y="0" w="68" h="76" />		
+		<PushedTexture name="$parentPushedBG" file="ui/mobile/ui.png" x="1" y="0" w="82" h="76">
+			<Size>
+				<AbsDimension x="82" y="76"/>
+			</Size>
+		</PushedTexture>
+		<HighlightTexture name="$parentHighlightBG" file="ui/mobile/ui.png" x="88" y="0" w="68" h="76"/>
+		<CheckedTexture name="$parentCheckedBG" file="ui/mobile/ui.png" x="1" y="0" w="82" h="76">
+			<Size>
+				<AbsDimension x="82" y="76"/>
+			</Size>
+		</CheckedTexture>
+	</Button>
+	
+	<Button name="PackGridBtnTemplate" virtual="true" click_threshhold="15">
+		<Size>
+			<AbsDimension x="66" y="68"/>
+		</Size>
+		<Layers>
+			<Layer level="BACKGROUND">
+				<Texture name="$parentBkgTexture" file="ui/mobile/ui.png" x="160" y="4" w="66" h="68">
+					<Size>
+						<AbsDimension x="66" y="68"/>
+					</Size>
+					<Anchors>
+						<Anchor point="TopLeft" relativePoint="TopLeft" relativeTo="$parent">
+							<Offset>
+								<AbsDimension x="0" y="0"/>
+							</Offset>
+						</Anchor>
+					</Anchors>				
+				</Texture>
+			</Layer>
+		</Layers>
+		<Frames>
+			<Frame name="$parentContent" input_transparent="true">
+				<Size>
+					<AbsDimension x="64" y="64"/>
+				</Size>
+				<Anchors>
+					<Anchor point="center" relativePoint="center" relativeTo="$parent">
+						<Offset>
+							<AbsDimension x="0" y="0"/>
+						</Offset>
+					</Anchor>
+				</Anchors>
+				<Layers>
+					<Layer level="BACKGROUND">
+						<Texture name="$parentIcon">
+						</Texture>
+						<Texture name="$parentBoxTexture" file="ui/backpack.png" x="90" y="774" w="70" h="70" hidden="true" color="ff00ff00">
+							<Size>
+								<AbsDimension x="70" y="69"/>
+							</Size>
+							<Anchors>
+								<Anchor point="TopLeft" relativePoint="TopLeft" relativeTo="$parent">
+									<Offset>
+										<AbsDimension x="-3" y="-3"/>
+									</Offset>
+								</Anchor>
+							</Anchors>				
+						</Texture>
+					</Layer>
+					<Layer level="ARTWORK">
+						<Texture name="$parentDuration" file="ui/backpack.png" x="143" y="698" w="60" h="9" hidden="true">
+							<Size>
+								<AbsDimension x="60" y="9"/>
+							</Size>
+							<Anchors>
+								<Anchor point="BottomLeft" relativePoint="BottomLeft" relativeTo="$parent">
+									<Offset>
+										<AbsDimension x="2" y="-5"/>
+									</Offset>
+								</Anchor>
+							</Anchors>				
+						</Texture>
+					</Layer>
+					<Layer level="HIGHLIGHT">
+						 <FontString name="$parentCount" fonttype="MinimumBlackFont" fontStyle="border" justifyH="right" text="">
+							<Color r="243" g="245" b="218" />
+							<Size>
+								<AbsDimension x="14" y="14" />
+							</Size>
+							<Anchors>
+								<Anchor point="topleft" relativePoint="topleft" relativeTo="$parent">
+									<Offset>
+										<AbsDimension x="0" y="0" />
+									</Offset>
+								</Anchor>
+							</Anchors>
+						</FontString>
+					</Layer>
+				</Layers>
+			</Frame>
+		</Frames>
+		<Scripts>
+			<OnMouseDown>PackGridBtn_MouseDown()</OnMouseDown>
+			<OnMouseUp>PackGridBtn_MouseUp()</OnMouseUp>
+			<OnClick>PackGridBtn_OnClick()</OnClick>
+		</Scripts>
+	</Button>
+	
+	<Button name="CraftingTableLeftBtnTemplate" virtual="true">
+		<Size>
+			<AbsDimension x="93" y="77"/>
+		</Size>
+		<NormalTexture name="$parentNormal" file="ui/mobile/ui.png" x="2" y="650" w="93" h="77" />		
+		<PushedTexture name="$parentPushedBG" file="ui/mobile/ui.png" x="98" y="651" w="113" h="78">
+			<Size>
+				<AbsDimension x="113" y="78"/>
+			</Size>
+		</PushedTexture>
+		<HighlightTexture name="$parentHighlightBG" file="ui/mobile/ui.png" x="2" y="650" w="93" h="77"/>
+		<CheckedTexture name="$parentCheckedBG" file="ui/mobile/ui.png" x="98" y="651" w="113" h="78">
+			<Size>
+				<AbsDimension x="113" y="78"/>
+			</Size>
+		</CheckedTexture>
+	</Button>
+	
+	<Button name="CraftingTableGridBtnTemplate" virtual="true">
+		<Size>
+			<AbsDimension x="69" y="73"/>
+		</Size>
+		<Layers>
+			<Layer level="BACKGROUND">
+				<Texture name="$parentBkgTexture" file="ui/mobile/ui.png" x="932" y="389" w="69" h="73">
+					<Size>
+						<AbsDimension x="69" y="73"/>
+					</Size>
+					<Anchors>
+						<Anchor point="TopLeft" relativePoint="TopLeft" relativeTo="$parent">
+							<Offset>
+								<AbsDimension x="0" y="0"/>
+							</Offset>
+						</Anchor>
+					</Anchors>				
+				</Texture>
+			</Layer>
+		</Layers>
+		<Frames>
+			<Frame name="$parentContent" input_transparent="true">
+				<Size>
+					<AbsDimension x="64" y="64"/>
+				</Size>
+				<Anchors>
+					<Anchor point="center" relativePoint="center" relativeTo="$parent">
+						<Offset>
+							<AbsDimension x="0" y="0"/>
+						</Offset>
+					</Anchor>
+				</Anchors>
+				<Layers>
+					<Layer level="BACKGROUND">
+						<Texture name="$parentIcon">
+						</Texture>
+						<Texture name="$parentBoxTexture" file="ui/backpack.png" x="90" y="774" w="70" h="70" hidden="true">
+							<Size>
+								<AbsDimension x="70" y="70"/>
+							</Size>
+							<Anchors>
+								<Anchor point="TopLeft" relativePoint="TopLeft" relativeTo="$parent">
+									<Offset>
+										<AbsDimension x="-3" y="-3"/>
+									</Offset>
+								</Anchor>
+							</Anchors>				
+						</Texture>
+					</Layer>
+					<Layer level="ARTWORK">
+						<Texture name="$parentDuration" file="ui/backpack.png" x="143" y="698" w="60" h="9" hidden="true">
+							<Size>
+								<AbsDimension x="60" y="9"/>
+							</Size>
+							<Anchors>
+								<Anchor point="BottomLeft" relativePoint="BottomLeft" relativeTo="$parent">
+									<Offset>
+										<AbsDimension x="2" y="-5"/>
+									</Offset>
+								</Anchor>
+							</Anchors>				
+						</Texture>
+					</Layer>
+					<Layer level="HIGHLIGHT">
+						 <FontString name="$parentCount" fonttype="MinimumBlackFont" fontStyle="border" justifyH="right" text="">
+							<Color r="243" g="245" b="218" />
+							<Size>
+								<AbsDimension x="14" y="14" />
+							</Size>
+							<Anchors>
+								<Anchor point="topleft" relativePoint="topleft" relativeTo="$parent">
+									<Offset>
+										<AbsDimension x="0" y="0" />
+									</Offset>
+								</Anchor>
+							</Anchors>
+						</FontString>
+					</Layer>
+				</Layers>
+			</Frame>
+		</Frames>
+		<Scripts>
+			<OnMouseDown>CraftingTableGridBtn_MouseDown()</OnMouseDown>
+			<OnMouseUp>CraftingTableGridBtn_MouseUp()</OnMouseUp>
+		</Scripts>
+	</Button>
+
+	<Button name="MItemButtonTemplate" virtual="true">
+		<Size>
+			<AbsDimension x="64" y="64" />
+		</Size>
+		<Anchors>
+			<Anchor point="topleft" relativePoint="topleft" relativeTo="$parent">
+				<Offset>
+					<AbsDimension x="0" y="0"/>
+				</Offset>
+			</Anchor>
+		</Anchors>
+		<Frames>
+			<Frame name="$parentContent" input_transparent="true">
+				<Size>
+					<AbsDimension x="64" y="64"/>
+				</Size>
+				<Anchors>
+					<Anchor point="center" relativePoint="center" relativeTo="$parent">
+						<Offset>
+							<AbsDimension x="0" y="0"/>
+						</Offset>
+					</Anchor>
+				</Anchors>
+				<Layers>
+					<Layer level="BACKGROUND">
+						<Texture name="$parentIcon">
+						</Texture>
+						<Texture name="$parentBoxTexture" file="ui/backpack.png" x="90" y="774" w="70" h="70" hidden="true">
+							<Size>
+								<AbsDimension x="70" y="70"/>
+							</Size>
+							<Anchors>
+								<Anchor point="TopLeft" relativePoint="TopLeft" relativeTo="$parent">
+									<Offset>
+										<AbsDimension x="-3" y="-3"/>
+									</Offset>
+								</Anchor>
+							</Anchors>				
+						</Texture>
+					</Layer>
+					<Layer level="ARTWORK">
+						<Texture name="$parentDuration" file="ui/backpack.png" x="143" y="698" w="60" h="9" hidden="true">
+							<Size>
+								<AbsDimension x="60" y="9"/>
+							</Size>
+							<Anchors>
+								<Anchor point="BottomLeft" relativePoint="BottomLeft" relativeTo="$parent">
+									<Offset>
+										<AbsDimension x="2" y="-5"/>
+									</Offset>
+								</Anchor>
+							</Anchors>				
+						</Texture>
+					</Layer>
+					<Layer level="HIGHLIGHT">
+						 <FontString name="$parentCount" fonttype="MinimumBlackFont" fontStyle="border" justifyH="right" text="">
+							<Color r="243" g="245" b="218" />
+							<Size>
+								<AbsDimension x="14" y="14" />
+							</Size>
+							<Anchors>
+								<Anchor point="topleft" relativePoint="topleft" relativeTo="$parent">
+									<Offset>
+										<AbsDimension x="-2" y="3" />
+									</Offset>
+								</Anchor>
+							</Anchors>
+						</FontString>
+					</Layer>
+				</Layers>
+			</Frame>
+		</Frames>
+		<Scripts>
+			<OnClick>MItemButton_OnClick();</OnClick>
+		</Scripts>
+	</Button>
+
+</Ui>

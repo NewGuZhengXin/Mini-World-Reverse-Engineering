@@ -1,0 +1,1270 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<Ui>
+	<Script file="ui/mobile/lobby.lua" />
+	<Frame name="GongNengFrame" parent="UIClient" frameStrata="BACKGROUND" hidden="true" framelevel="2">
+		<Size>
+			<AbsDimension x="170" y="100"/>
+		</Size>	
+		<Anchors>
+			<Anchor point="topright" relativePoint="topright" relativeTo="$parent">
+				<Offset>
+					<AbsDimension x="-20" y="18"/>
+				</Offset>
+			</Anchor>
+		</Anchors>
+		<Frames>
+			<Button name="$parentGongNengBtn">
+				<Size>
+					<AbsDimension x="60" y="60"/>
+				</Size>
+				<Anchors>
+					<Anchor point="topright" relativeTo="$parent" relativePoint="topright">
+						<Offset>
+							<AbsDimension x="0" y="0" />
+						</Offset>
+					</Anchor>
+				</Anchors>
+				<NormalTexture name="$parentNormal" file="ui/mobile/ui.png" x="653" y="3" w="60" h="60"/>
+				<PushedTexture name="$parentPushed" file="ui/mobile/ui.png" x="714" y="3" w="60" h="60"/>
+				<Scripts>
+					<OnClick>GongNengFrameGongNengBtn_OnClick();</OnClick>
+				</Scripts>
+			</Button>
+			<Button name="$parentVip">
+				<Size>
+					<AbsDimension x="108" y="82"/>
+				</Size>
+				<Anchors>
+					<Anchor point="right" relativeTo="$parentGongNengBtn" relativePoint="left">
+						<Offset>
+							<AbsDimension x="-10" y="0" />
+						</Offset>
+					</Anchor>
+				</Anchors>
+				<Layers>
+					<Layer level="overlay">
+						<Texture name="$parentUVAnimationTex" file="ui/mobile/effect/ui_button_vip.png" hidden="true">
+							<Size>
+								<AbsDimension x="180" y="180"/>
+							</Size>
+							<Anchors>
+								<Anchor point="center" relativePoint="center" relativeTo="$parent">
+									<Offset>
+										<AbsDimension x="10" y="0"/>
+									</Offset>
+								</Anchor>
+							</Anchors>	
+							<UVAnimation texrows="4" texcols="4" />
+						</Texture>
+					</Layer>
+				</Layers>
+				<NormalTexture name="$parentNormal" file="ui/mobile/ui.png" x="927" y="3" w="96" h="76"/>
+				<PushedTexture name="$parentPushed" file="ui/mobile/ui.png" x="927" y="3" w="96" h="76"/>
+				<Scripts>
+					<OnClick>GongNengFrameVipBtn_OnClick();</OnClick>
+				</Scripts>
+			</Button>
+			<Frame name="$parentList" hidden="true">
+				<Size>
+					<AbsDimension x="70" y="340"/>
+				</Size>	
+				<Anchors>
+					<Anchor point="top" relativePoint="bottom" relativeTo="$parentGongNengBtn">
+						<Offset>
+							<AbsDimension x="5" y="5"/>
+						</Offset>
+					</Anchor>
+				</Anchors>
+				<Frames>>
+					<Button name="$parentMapBtn">
+						<Size>
+							<AbsDimension x="79" y="79"/>
+						</Size>
+						<Anchors>
+							<Anchor point="topright" relativeTo="$parent" relativePoint="topright">
+								<Offset>
+									<AbsDimension x="0" y="0" />
+								</Offset>
+							</Anchor>
+						</Anchors>
+						<Layers>
+							<Layer level="overlay">
+								<Texture name="$parentName" file="ui/mobile/ui1.png" x="919" y="901" w="50" h="29">
+									<Size>
+										<AbsDimension x="56" y="33"/>
+									</Size>
+									<Anchors>
+										<Anchor point="center" relativePoint="center" relativeTo="$parent">
+											<Offset>
+												<AbsDimension x="0" y="0"/>
+											</Offset>
+										</Anchor>
+									</Anchors>	
+								</Texture>
+							</Layer>
+						</Layers>
+						<NormalTexture name="$parentNormal" file="ui/mobile/ui2.png" x="308" y="208" w="70" h="70"/>
+						<PushedTexture name="$parentPushed" file="ui/mobile/ui2.png" x="380" y="208" w="70" h="70"/>
+						<Scripts>
+							<OnClick>GongNengFrameListMapBtn_OnClick();</OnClick>
+						</Scripts>
+					</Button>
+					<Button name="$parentFriendBtn">
+						<Size>
+							<AbsDimension x="79" y="79"/>
+						</Size>
+						<Anchors>
+							<Anchor point="top" relativeTo="$parentMapBtn" relativePoint="bottom">
+								<Offset>
+									<AbsDimension x="0" y="5" />
+								</Offset>
+							</Anchor>
+						</Anchors>
+						<Layers>
+							<Layer level="overlay">
+								<Texture name="$parentName" file="ui/mobile/ui1.png" x="972" y="901" w="50" h="28">
+									<Size>
+										<AbsDimension x="56" y="32"/>
+									</Size>
+									<Anchors>
+										<Anchor point="center" relativePoint="center" relativeTo="$parent">
+											<Offset>
+												<AbsDimension x="0" y="0"/>
+											</Offset>
+										</Anchor>
+									</Anchors>	
+								</Texture>
+							</Layer>
+						</Layers>
+						<NormalTexture name="$parentNormal" file="ui/mobile/ui2.png" x="308" y="208" w="70" h="70"/>
+						<PushedTexture name="$parentPushed" file="ui/mobile/ui2.png" x="380" y="208" w="70" h="70"/>
+						<Scripts>
+							<OnClick>GongNengFrameListFriendBtn_OnClick();</OnClick>
+						</Scripts>
+					</Button>
+					<Button name="$parentActivityBtn">
+						<Size>
+							<AbsDimension x="79" y="79"/>
+						</Size>
+						<Anchors>
+							<Anchor point="top" relativeTo="$parentFriendBtn" relativePoint="bottom">
+								<Offset>
+									<AbsDimension x="0" y="5" />
+								</Offset>
+							</Anchor>
+						</Anchors>
+						<Layers>
+							<Layer level="overlay">
+								<Texture name="$parentName" file="ui/mobile/ui1.png" x="920" y="930" w="50" h="28">
+									<Size>
+										<AbsDimension x="56" y="32"/>
+									</Size>
+									<Anchors>
+										<Anchor point="center" relativePoint="center" relativeTo="$parent">
+											<Offset>
+												<AbsDimension x="0" y="0"/>
+											</Offset>
+										</Anchor>
+									</Anchors>	
+								</Texture>
+							</Layer>
+						</Layers>
+						<NormalTexture name="$parentNormal" file="ui/mobile/ui2.png" x="308" y="208" w="70" h="70"/>
+						<PushedTexture name="$parentPushed" file="ui/mobile/ui2.png" x="380" y="208" w="70" h="70"/>
+						<Scripts>
+							<OnClick>GongNengFrameListActivityBtn_OnClick();</OnClick>
+						</Scripts>
+					</Button>
+					<Button name="$parentSetBtn">
+						<Size>
+							<AbsDimension x="79" y="79"/>
+						</Size>
+						<Anchors>
+							<Anchor point="top" relativeTo="$parentActivityBtn" relativePoint="bottom">
+								<Offset>
+									<AbsDimension x="0" y="5" />
+								</Offset>
+							</Anchor>
+						</Anchors>
+						<Layers>
+							<Layer level="overlay">
+								<Texture name="$parentName" file="ui/mobile/ui1.png" x="973" y="929" w="50" h="29">
+									<Size>
+										<AbsDimension x="56" y="33"/>
+									</Size>
+									<Anchors>
+										<Anchor point="center" relativePoint="center" relativeTo="$parent">
+											<Offset>
+												<AbsDimension x="0" y="0"/>
+											</Offset>
+										</Anchor>
+									</Anchors>	
+								</Texture>
+							</Layer>
+						</Layers>
+						<NormalTexture name="$parentNormal" file="ui/mobile/ui2.png" x="308" y="208" w="70" h="70"/>
+						<PushedTexture name="$parentPushed" file="ui/mobile/ui2.png" x="380" y="208" w="70" h="70"/>
+						<Scripts>
+							<OnClick>GongNengFrameListSetBtn_OnClick();</OnClick>
+						</Scripts>
+					</Button>
+				</Frames>
+			</Frame>
+		</Frames>
+		<Scripts>
+			<OnShow>GongNengFrame_OnShow();</OnShow>
+			<OnHide>GongNengFrame_OnHide();</OnHide>
+		</Scripts>
+	</Frame>
+	#存档条模版
+	<Frame name="ArchiveTemplate" virtual="true">
+		<Size>
+			<AbsDimension x="588" y="130"/>
+		</Size>	
+		<Frames>
+			<Button name="$parentDelete">
+				<Size>
+					<AbsDimension x="74" y="75"/>
+				</Size>
+				<Anchors>
+					<Anchor point="left" relativePoint="left" relativeTo="$parent">
+						<Offset>
+							<AbsDimension x="16" y="0"/>
+						</Offset>
+					</Anchor>
+				</Anchors>
+				<NormalTexture name="$parentNormal" file="ui/mobile/ui1.png" x="823" y="163" w="66" h="67" />		
+				<PushedTexture name="$parentPushedBG" file="ui/mobile/ui1.png" x="892" y="163" w="66" h="67" />
+				<Scripts>
+					<OnClick>ArchiveDelete_OnClick();</OnClick>
+				</Scripts>
+			</Button>
+			<Button name="$parentShare">
+				<Size>
+					<AbsDimension x="74" y="75"/>
+				</Size>
+				<Anchors>
+					<Anchor point="left" relativePoint="right" relativeTo="$parentDelete">
+						<Offset>
+							<AbsDimension x="11" y="0"/>
+						</Offset>
+					</Anchor>
+				</Anchors>
+				<NormalTexture name="$parentNormal" file="ui/mobile/ui1.png" x="823" y="232" w="66" h="67" />		
+				<PushedTexture name="$parentPushedBG" file="ui/mobile/ui1.png" x="892" y="232" w="66" h="67" />
+				<Scripts>
+					<OnClick>ArchiveShare_OnClick();</OnClick>
+				</Scripts>
+			</Button>	
+			<SlidingFrame name="$parentSlidingFrame" slidingX="true" movestartX="170" slideplane="$parentPlane">
+				<Size>
+					<AbsDimension x="572" y="114"/>
+				</Size>
+				<Anchors>
+					<Anchor point="topleft" relativePoint="topleft" relativeTo="$parent">
+						<Offset>
+							<AbsDimension x="16" y="16" />
+						</Offset>
+					</Anchor>
+				</Anchors>
+				<Frames>
+					<Frame name="$parentPlane" hidden="true">
+						<Size>
+							<AbsDimension x="572" y="114"/>
+						</Size>
+					</Frame>
+					<Frame name="$parentbg112">
+						<Anchors>
+							<Anchor point="bottomleft" relativeTo="$parentPlane" relativePoint="bottomleft">
+								<Offset>
+									<AbsDimension x="0" y="0" />
+								</Offset>
+							</Anchor>
+							<Anchor point="bottomright" relativeTo="$parent" relativePoint="bottomright">
+								<Offset>
+									<AbsDimension x="0" y="0" />
+								</Offset>
+							</Anchor>
+						</Anchors>
+						<Layers>
+							<Layer level="BACKGROUND">
+								<Texture name="$parentBkg" inherits="GaryBkgTemplate">
+								</Texture>
+							</Layer>
+						</Layers>
+					</Frame>
+					<Button name="$parentContent" click_threshold="5">
+						<Size>
+							<AbsDimension x="572" y="114" />
+						</Size>
+						<Anchors>
+							<Anchor point="left" relativePoint="left" relativeTo="$parentPlane">
+								<Offset>
+									<AbsDimension x="0" y="0"/>
+								</Offset>
+							</Anchor>
+						</Anchors>
+						<Layers>
+							<Layer level="BACKGROUND">
+								<Texture name="$parentModelIcon" file="ui/mobile/ui1.png" x="822" y="84" w="76" h="76">
+									<Size>
+										<AbsDimension x="86" y="86" />
+									</Size>
+									<Anchors>
+										<Anchor point="topleft" relativeTo="$parent" relativePoint="topleft">
+											<Offset>
+												<AbsDimension x="19" y="12" />
+											</Offset>
+										</Anchor>
+									</Anchors>
+								</Texture>
+								<Texture name="$parentHeadIcon" file="ui/roleicons/1.png">
+									<Size>
+										<AbsDimension x="65" y="65" />
+									</Size>
+									<Anchors>
+										<Anchor point="topleft" relativeTo="$parent" relativePoint="topleft">
+											<Offset>
+												<AbsDimension x="317" y="20" />
+											</Offset>
+										</Anchor>
+									</Anchors>
+								</Texture>
+								<FontString name="$parentTime" fonttype="BlackFont18" lineInterval="2" text="世界探索：2天前">
+									<Color r="255" g="230" b="67"/>
+									<Size>
+										<AbsDimension x="190" y="18"/>
+									</Size>
+									<Anchors>
+										<Anchor point="left" relativePoint="right" relativeTo="$parentHeadIcon">
+											<Offset>
+												<AbsDimension x="6" y="0"/>
+											</Offset>
+										</Anchor>
+									</Anchors>
+								</FontString>
+							</Layer>
+						</Layers>
+						<Frames>
+							<RichText name="$parentName" lineInterval="4" multiLine="false" fonttype="BlackFont28" fontStyle="border" autoextend="false" input_transparent="true">
+								<Size>
+									<AbsDimension x="200" y="90" />
+								</Size>
+								<Anchors>
+									<Anchor point="left" relativeTo="$parentModelIcon" relativePoint="right">
+										<Offset>
+											<AbsDimension x="10" y="0" />
+										</Offset>
+									</Anchor>
+								</Anchors>
+							</RichText>
+						</Frames>
+						<Scripts>
+							<OnClick>ArchiveContent_OnClick();</OnClick>
+						</Scripts>
+					</Button>
+				</Frames>
+			</SlidingFrame>
+			<Button name="$parentBkg" hidden="true">
+				<Size>
+					<AbsDimension x="572" y="114"/>
+				</Size>
+				<Anchors>
+					<Anchor point="left" relativePoint="left" relativeTo="$parent">
+						<Offset>
+							<AbsDimension x="16" y="0"/>
+						</Offset>
+					</Anchor>
+				</Anchors>
+				<NormalTexture name="$parentNormal" inherits="GaryBkgTemplate" />
+			</Button>
+			<Button name="$parentShareIcon" hidden="true">
+				<Size>
+					<AbsDimension x="48" y="50"/>
+				</Size>
+				<Anchors>
+					<Anchor point="center" relativePoint="topleft" relativeTo="$parentSlidingFrameContent">
+						<Offset>
+							<AbsDimension x="10" y="10"/>
+						</Offset>
+					</Anchor>
+				</Anchors>
+				<NormalTexture name="$parentNormal" file="ui/mobile/ui.png" x="915" y="589" w="43" h="44" />		
+			</Button>
+		</Frames>	
+	</Frame>
+	#自己的分享地图模版
+	<!--
+	<Frame name="shareMapTemplate" virtual="true">
+		<Size>
+			<AbsDimension x="563" y="114"/>
+		</Size>
+		<Layers>
+			<Layer level="BACKGROUND">
+				<Texture name="$parentMapBkg" inherits="GaryBkgTemplate" />
+				<Texture name="$parentGameModel" file="ui/mobile/ui1.png" x="822" y="84" w="76" h="76" >
+					<Size>
+						<AbsDimension x="86" y="86" />
+					</Size>
+					<Anchors>
+						<Anchor point="topleft" relativeTo="$parentMapBkg" relativePoint="topleft">
+							<Offset>
+								<AbsDimension x="26" y="12" />
+							</Offset>
+						</Anchor>
+					</Anchors>
+				</Texture>
+				<Texture name="$parentHeadIcon" file="ui/roleicons/1.png">
+					<Size>
+						<AbsDimension x="65" y="65" />
+					</Size>
+					<Anchors>
+						<Anchor point="topleft" relativeTo="$parentMapBkg" relativePoint="topleft">
+							<Offset>
+								<AbsDimension x="317" y="20" />
+							</Offset>
+						</Anchor>
+					</Anchors>
+				</Texture>
+				<FontString name="$parentTime" fonttype="BlackFont18" lineInterval="2" text="世界探索：2天前">
+					<Color r="255" g="230" b="67"/>
+					<Size>
+						<AbsDimension x="190" y="18"/>
+					</Size>
+					<Anchors>
+						<Anchor point="left" relativePoint="right" relativeTo="$parentHeadIcon">
+							<Offset>
+								<AbsDimension x="6" y="0"/>
+							</Offset>
+						</Anchor>
+					</Anchors>
+				</FontString>
+			</Layer>
+		</Layers>
+		<Frames>
+			<RichText name="$parentMapName" lineInterval="4" multiLine="false" fonttype="BlackFont28" fontStyle="border" autoextend="true" input_transparent="true">
+				<Size>
+					<AbsDimension x="200" y="80" />
+				</Size>
+				<Anchors>
+					<Anchor point="left" relativeTo="$parentGameModel" relativePoint="right">
+						<Offset>
+							<AbsDimension x="10" y="0" />
+						</Offset>
+					</Anchor>
+				</Anchors>
+			</RichText>
+		</Frames>
+	</Frame>
+	-->
+	<Frame name="LobbyFrame" parent="UIClient" frameStrata="BACKGROUND" hidden="true" framelevel="1">
+		<Size>
+			<RelDimension x="1.0" y="1.0"/>
+		</Size>
+		<Anchors>
+			<Anchor point="topleft" relativePoint="topleft" relativeTo="$parent">
+				<Offset>
+					<AbsDimension x="0" y="0" />
+				</Offset>
+			</Anchor>
+		</Anchors>
+		<Layers>
+			<Layer level="BACKGROUND">
+				<Texture name="$parentBkg" file="ui/login_bg.png">
+					<Anchors>
+						<Anchor point="topleft" relativePoint="topleft" relativeTo="$parent">
+							<Offset>
+								<AbsDimension x="0" y="0"/>
+							</Offset>
+						</Anchor>
+					</Anchors>
+				</Texture>
+				<Texture name="$parentRoleBkg" inherits="GaryBkgTemplate" color="d6ffffff">
+					<Size>
+						<AbsDimension x="485" y="687"/>
+					</Size>
+					<Anchors>
+						<Anchor point="topleft" relativePoint="topleft" relativeTo="$parent">
+							<Offset>
+								<AbsDimension x="15" y="20"/>
+							</Offset>
+						</Anchor>
+					</Anchors>
+				</Texture>
+				<Texture name="$parentAdorn" file="ui/mobile/ui2.png" x="3" y="136" w="224" h="76">
+					<Size>
+						<AbsDimension x="252" y="86"/>
+					</Size>
+					<Anchors>
+						<Anchor point="bottomleft" relativePoint="bottomleft" relativeTo="$parentRoleBkg">
+							<Offset>
+								<AbsDimension x="190" y="-10"/>
+							</Offset>
+						</Anchor>
+					</Anchors>
+				</Texture>
+				<Texture name="$parentRoleChenDi" inherits="BlackBkgTemplate" >
+					<Size>
+						<AbsDimension x="357" y="501"/>
+					</Size>
+					<Anchors>
+						<Anchor point="center" relativePoint="center" relativeTo="$parentRoleBkg">
+							<Offset>
+								<AbsDimension x="0" y="0"/>
+							</Offset>
+						</Anchor>
+					</Anchors>
+				</Texture>
+				<FontString name="$parentRoleName" fonttype="BlackFont24" lineInterval="2" text="采蘑菇的小熊酱" fontStyle="border" >
+					<Color r="255" g="255" b="255"/>
+					<Size>
+						<AbsDimension x="200" y="25"/>
+					</Size>
+					<Anchors>
+						<Anchor point="topleft" relativePoint="topleft" relativeTo="$parentRoleBkg">
+							<Offset>
+								<AbsDimension x="155" y="16"/>
+							</Offset>
+						</Anchor>
+					</Anchors>
+				</FontString>
+				<FontString name="$parentUin" fonttype="BlackFont28" lineInterval="2" text="Uni帐号" fontStyle="border" >
+					<Color r="255" g="229" b="64"/>
+					<Size>
+						<AbsDimension x="200" y="29"/>
+					</Size>
+					<Anchors>
+						<Anchor point="topleft" relativePoint="bottomleft" relativeTo="$parentRoleName">
+							<Offset>
+								<AbsDimension x="0" y="10"/>
+							</Offset>
+						</Anchor>
+					</Anchors>
+				</FontString>
+				<Texture name="$parentBlueJewel" file="ui/mobile/ui.png" x="434" y="213" w="49" h="53" >
+					<Size>
+						<AbsDimension x="55" y="60"/>
+					</Size>
+					<Anchors>
+						<Anchor point="topleft" relativePoint="topleft" relativeTo="$parent">
+							<Offset>
+								<AbsDimension x="563" y="20"/>
+							</Offset>
+						</Anchor>
+					</Anchors>
+				</Texture>
+				<FontString name="$parentJewelFont" fonttype="BlackFont34" lineInterval="2" text="123456789" fontStyle="border" >
+					<Color r="255" g="230" b="67"/>
+					<Size>
+						<AbsDimension x="170" y="34"/>
+					</Size>
+					<Anchors>
+						<Anchor point="left" relativePoint="right" relativeTo="$parentBlueJewel">
+							<Offset>
+								<AbsDimension x="15" y="0"/>
+							</Offset>
+						</Anchor>
+					</Anchors>
+				</FontString>
+			</Layer>
+			<Layer level="ARTWORK">
+				<ModelView name="$parentRoleView">
+					<Size>
+						<AbsDimension x="280" y="450"/>
+					</Size>
+					<Anchors>
+						<Anchor point="center" relativeTo="$parentRoleChenDi" relativePoint="center">
+							<Offset>
+								<AbsDimension x="0" y="-40" />
+							</Offset>
+						</Anchor>
+					</Anchors>
+				</ModelView>
+			</Layer>
+		</Layers>
+		<Frames>
+			<Button name="$parentCollectBtn">
+				<Size>
+					<AbsDimension x="106" y="110"/>
+				</Size>
+				<Anchors>
+					<Anchor point="bottomleft" relativeTo="$parentRoleBkg" relativePoint="bottomleft">
+						<Offset>
+							<AbsDimension x="1" y="-3"/>
+						</Offset>
+					</Anchor>
+				</Anchors>
+				<NormalTexture name="$parentNormal" file="ui/mobile/ui.png" x="542" y="878" w="94" h="98" />		
+				<PushedTexture name="$parentPushedBG" file="ui/mobile/ui.png" x="639" y="878" w="94" h="98" />
+				<Scripts>
+					<OnClick>LobbyFrameCollectBtn_OnClick();</OnClick>
+				</Scripts>
+			</Button>
+			<Button name="$parentHeadBtn">
+				<Size>
+					<AbsDimension x="90" y="92"/>
+				</Size>
+				<Anchors>
+					<Anchor point="topleft" relativeTo="$parentRoleBkg" relativePoint="topleft">
+						<Offset>
+							<AbsDimension x="26" y="29"/>
+						</Offset>
+					</Anchor>
+				</Anchors>
+				<Layers>
+					<Layer level="overlay">
+						<Texture name="$parentIcon">
+							<Size>
+								<AbsDimension x="65" y="65" />
+							</Size>
+							<Anchors>
+								<Anchor point="bottom" relativeTo="$parent" relativePoint="bottom">
+									<Offset>
+										<AbsDimension x="0" y="-14" />
+									</Offset>
+								</Anchor>
+							</Anchors>
+						</Texture>
+						<Texture name="$parentVipBkg" file="ui/mobile/ui.png" x="811" y="649" w="56" h="63" >
+							<Size>
+								<AbsDimension x="63" y="71"/>
+							</Size>
+							<Anchors>
+								<Anchor point="topleft" relativePoint="topleft" relativeTo="$parent">
+									<Offset>
+										<AbsDimension x="54" y="-25"/>
+									</Offset>
+								</Anchor>
+							</Anchors>
+						</Texture>
+						<FontString name="$parentVipFont" fonttype="BlackFont28" lineInterval="2" text="V7" justifyH="center" fontStyle="border">
+							<Color r="255" g="255" b="255"/>
+							<Size>
+								<AbsDimension x="35" y="28"/>
+							</Size>
+							<Anchors>
+								<Anchor point="center" relativePoint="center" relativeTo="$parentVipBkg">
+									<Offset>
+										<AbsDimension x="0" y="0"/>
+									</Offset>
+								</Anchor>
+							</Anchors>
+						</FontString>
+					</Layer>
+				</Layers>
+				<NormalTexture name="$parentNormal" file="ui/mobile/ui1.png" x="822" y="1" w="80" h="82" />
+				<PushedTexture name="$parentPushedBG" file="ui/mobile/ui1.png" x="900" y="1" w="80" h="82" />
+				<Scripts>
+					<OnClick>LobbyFrameHeadBtn_OnClick();</OnClick>
+				</Scripts>
+			</Button>
+			#存档面板
+			<Frame name="$parentArchiveFrame">
+				<Size>
+					<AbsDimension x="745" y="600"/>
+				</Size>
+				<Anchors>
+					<Anchor point="topright" relativePoint="topright" relativeTo="$parent">
+						<Offset>
+							<AbsDimension x="-30" y="98"/>
+						</Offset>
+					</Anchor>
+				</Anchors>
+				<Layers>
+					<Layer level="BACKGROUND">
+						<Texture name="$parentArchiveBkg" inherits="GaryBkgTemplate" color="d6ffffff"/>
+						<Texture name="$parentArchiveChenDi" inherits="BlackBkgTemplate">
+							<Size>
+								<AbsDimension x="617" y="448"/>
+							</Size>
+							<Anchors>
+								<Anchor point="topleft" relativePoint="topleft" relativeTo="$parent">
+									<Offset>
+										<AbsDimension x="64" y="51"/>
+									</Offset>
+								</Anchor>
+							</Anchors>
+						</Texture>
+					</Layer>
+				</Layers>
+				<Frames>
+					<Button name="$parentCreateNewWorldBtn" inherits="GreenBtnTemplate">
+						<Size>
+							<AbsDimension x="219" y="86"/>
+						</Size>
+						<Anchors>
+							<Anchor point="bottomleft" relativeTo="$parent" relativePoint="bottomleft">
+								<Offset>
+									<AbsDimension x="56" y="-13"/>
+								</Offset>
+							</Anchor>
+						</Anchors>
+						<Layers>
+							<Layer level="overlay">
+								<Texture name="$parentName" file="ui/mobile/ui.png" x="872" y="147" w="147" h="26">
+									<Size>
+										<AbsDimension x="166" y="29"/>
+									</Size>
+									<Anchors>
+										<Anchor point="center" relativePoint="center" relativeTo="$parent">
+											<Offset>
+												<AbsDimension x="0" y="0"/>
+											</Offset>
+										</Anchor>
+									</Anchors>	
+								</Texture>
+							</Layer>
+						</Layers>
+						<Scripts>
+							<OnClick>LobbyFrameCreateNewWorldBtn_OnClick();</OnClick>
+						</Scripts>
+					</Button>
+					<Button name="$parentStartBtn" inherits="GreenBtnTemplate">
+						<Size>
+							<AbsDimension x="217" y="85"/>
+						</Size>
+						<Anchors>
+							<Anchor point="bottomright" relativeTo="$parent" relativePoint="bottomright">
+								<Offset>
+									<AbsDimension x="-54" y="-13"/>
+								</Offset>
+							</Anchor>
+						</Anchors>
+						<Layers>
+							<Layer level="overlay">
+								<Texture name="$parentName" file="ui/mobile/ui.png" x="539" y="735" w="96" h="27">
+									<Size>
+										<AbsDimension x="108" y="30"/>
+									</Size>
+									<Anchors>
+										<Anchor point="center" relativePoint="center" relativeTo="$parent">
+											<Offset>
+												<AbsDimension x="0" y="0"/>
+											</Offset>
+										</Anchor>
+									</Anchors>	
+								</Texture>
+							</Layer>
+						</Layers>
+						<Scripts>
+							<OnClick>LobbyFrameStartBtn_OnClick();</OnClick>
+						</Scripts>
+					</Button>
+					<SlidingFrame name="ArchiveBox" slidingY="true" slideplane="$parentPlane">
+						<Size>
+							<AbsDimension x="588" y="410"/>
+						</Size>
+						<Anchors>
+						<Anchor point="topleft" relativePoint="topleft" relativeTo="$parent">
+								<Offset>
+									<AbsDimension x="74" y="61"/>
+								</Offset>
+							</Anchor>
+						</Anchors>
+						<Frames>
+							<Frame name="$parentPlane" hidden="true">
+								<Size>
+									<AbsDimension x="588" y="700"/>
+								</Size>
+							</Frame>
+							<Frame name="ArchiveBtn1" inherits="ArchiveTemplate" id="1">
+								<Anchors>
+									<Anchor point="topleft" relativeTo="$parentPlane" relativePoint="topleft">
+										<Offset>
+											<AbsDimension x="0" y="0"/>
+										</Offset>
+									</Anchor>
+								</Anchors>
+							</Frame>
+							<Frame name="ArchiveBtn2" inherits="ArchiveTemplate" id="2">
+								<Anchors>
+									<Anchor point="top" relativeTo="ArchiveBtn1" relativePoint="bottom">
+										<Offset>
+											<AbsDimension x="0" y="10"/>
+										</Offset>
+									</Anchor>
+								</Anchors>
+							</Frame>
+							<Frame name="ArchiveBtn3" inherits="ArchiveTemplate" id="3">
+								<Anchors>
+									<Anchor point="top" relativeTo="ArchiveBtn2" relativePoint="bottom">
+										<Offset>
+											<AbsDimension x="0" y="10"/>
+										</Offset>
+									</Anchor>
+								</Anchors>
+							</Frame>
+							<Frame name="ArchiveBtn4" inherits="ArchiveTemplate" id="4" hidden="false">
+								<Anchors>
+									<Anchor point="top" relativeTo="ArchiveBtn3" relativePoint="bottom">
+										<Offset>
+											<AbsDimension x="0" y="10"/>
+										</Offset>
+									</Anchor>
+								</Anchors>
+							</Frame>
+							<Frame name="ArchiveBtn5" inherits="ArchiveTemplate" id="5" hidden="false">
+								<Anchors>
+									<Anchor point="top" relativeTo="ArchiveBtn4" relativePoint="bottom">
+										<Offset>
+											<AbsDimension x="0" y="10"/>
+										</Offset>
+									</Anchor>
+								</Anchors>
+							</Frame>			
+							<Frame name="ArchiveBtn6" inherits="ArchiveTemplate" id="6" hidden="false">
+								<Anchors>
+									<Anchor point="top" relativeTo="ArchiveBtn5" relativePoint="bottom">
+										<Offset>
+											<AbsDimension x="0" y="10"/>
+										</Offset>
+									</Anchor>
+								</Anchors>
+							</Frame>
+						</Frames>
+					</SlidingFrame>
+				</Frames>
+			</Frame>
+			#角色面板
+			<Frame name="$parentRoleInfo"  hidden="true">
+				<Size>
+					<AbsDimension x="745" y="620"/>
+				</Size>
+				<Anchors>
+					<Anchor point="topleft" relativePoint="topright" relativeTo="$parentRoleBkg">
+						<Offset>
+							<AbsDimension x="6" y="68"/>
+						</Offset>
+					</Anchor>
+				</Anchors>
+				<Layers>
+					<Layer level="BACKGROUND">
+						<Texture name="$parentBkg1" inherits="GaryBkgTemplate" color="d6ffffff">
+							<Size>
+								<AbsDimension x="745" y="208"/>
+							</Size>
+							<Anchors>
+								<Anchor point="topleft" relativePoint="topleft" relativeTo="$parent">
+									<Offset>
+										<AbsDimension x="0" y="0"/>
+									</Offset>
+								</Anchor>
+							</Anchors>
+						</Texture>
+						<Texture name="$parentBkg2" inherits="GaryBkgTemplate" color="d6ffffff">
+							<Size>
+								<AbsDimension x="745" y="410"/>
+							</Size>
+							<Anchors>
+								<Anchor point="topleft" relativePoint="bottomleft" relativeTo="$parentBkg1">
+									<Offset>
+										<AbsDimension x="0" y="1"/>
+									</Offset>
+								</Anchor>
+							</Anchors>
+						</Texture>
+						<Texture name="$parentMapBkg" inherits="GaryBkgTemplate">
+							<Size>
+								<AbsDimension x="563" y="114"/>
+							</Size>
+							<Anchors>
+								<Anchor point="top" relativePoint="top" relativeTo="$parentBkg2">
+									<Offset>
+										<AbsDimension x="0" y="62"/>
+									</Offset>
+								</Anchor>
+							</Anchors>
+						</Texture>
+						<Texture name="$parentRemarkBkg" inherits="BlackBkgTemplate" color="d6ffffff">
+							<Size>
+								<AbsDimension x="619" y="128"/>
+							</Size>
+							<Anchors>
+								<Anchor point="topleft" relativePoint="topleft" relativeTo="$parentBkg2">
+									<Offset>
+										<AbsDimension x="63" y="178"/>
+									</Offset>
+								</Anchor>
+							</Anchors>
+						</Texture>						
+						<Texture name="$parentAchievementBkg1" file="ui/mobile/ui2.png" x="474" y="95" w="202" h="73">
+							<Size>
+								<AbsDimension x="228" y="82"/>
+							</Size>
+							<Anchors>
+								<Anchor point="topleft" relativePoint="topleft" relativeTo="$parentBkg1">
+									<Offset>
+										<AbsDimension x="51" y="20"/>
+									</Offset>
+								</Anchor>
+							</Anchors>
+						</Texture>
+						<Texture name="$parentAchievementBkg2" file="ui/mobile/ui2.png" x="682" y="96" w="170" h="50">
+							<Size>
+								<AbsDimension x="193" y="56"/>
+							</Size>
+							<Anchors>
+								<Anchor point="topleft" relativePoint="topleft" relativeTo="$parentAchievementBkg1">
+									<Offset>
+										<AbsDimension x="28" y="5"/>
+									</Offset>
+								</Anchor>
+							</Anchors>
+						</Texture>
+						<FontString name="$parentAchiPoint" fonttype="BlackFont24" lineInterval="2" text="9999" fontStyle="border" >
+							<Color r="255" g="255" b="255"/>
+							<Size>
+								<AbsDimension x="60" y="25"/>
+							</Size>
+							<Anchors>
+								<Anchor point="left" relativePoint="right" relativeTo="$parentAchievementBkg1">
+									<Offset>
+										<AbsDimension x="10" y="0"/>
+									</Offset>
+								</Anchor>
+							</Anchors>
+						</FontString>
+						<FontString name="$parentAchiPercent" fonttype="BlackFont30" lineInterval="2" text="12.8%" fontStyle="border" >
+							<Color r="255" g="120" b="0"/>
+							<Size>
+								<AbsDimension x="90" y="31"/>
+							</Size>
+							<Anchors>
+								<Anchor point="left" relativePoint="right" relativeTo="$parentAchiPoint">
+									<Offset>
+										<AbsDimension x="10" y="-3"/>
+									</Offset>
+								</Anchor>
+							</Anchors>
+						</FontString>
+						<Texture name="$parentAchiIconBkg" file="ui/mobile/ui2.png" x="811" y="2" w="202" h="73">
+							<Size>
+								<AbsDimension x="228" y="82"/>
+							</Size>
+							<Anchors>
+								<Anchor point="left" relativePoint="right" relativeTo="$parentAchiPercent">
+									<Offset>
+										<AbsDimension x="20" y="0"/>
+									</Offset>
+								</Anchor>
+							</Anchors>
+						</Texture>
+						<Texture name="$parentAchiMedal" file="ui/mobile/ui1.png" x="982" y="280" w="37" h="53">
+							<Size>
+								<AbsDimension x="42" y="60"/>
+							</Size>
+							<Anchors>
+								<Anchor point="topleft" relativePoint="topleft" relativeTo="$parentAchiIconBkg">
+									<Offset>
+										<AbsDimension x="15" y="1"/>
+									</Offset>
+								</Anchor>
+							</Anchors>
+						</Texture>
+						<FontString name="$parentAchiName" fonttype="BlackFont30" lineInterval="2" text="武器大师" fontStyle="border" >
+							<Color r="255" g="190" b="60"/>
+							<Size>
+								<AbsDimension x="130" y="31"/>
+							</Size>
+							<Anchors>
+								<Anchor point="left" relativePoint="left" relativeTo="$parentAchiIconBkg">
+									<Offset>
+										<AbsDimension x="70" y="0"/>
+									</Offset>
+								</Anchor>
+							</Anchors>
+						</FontString>
+						<Texture name="$parentFlowerIcon" file="ui/mobile/ui2.png" x="678" y="147" w="74" h="76">
+							<Size>
+								<AbsDimension x="83" y="86"/>
+							</Size>
+							<Anchors>
+								<Anchor point="topleft" relativePoint="topleft" relativeTo="$parent">
+									<Offset>
+										<AbsDimension x="119" y="108"/>
+									</Offset>
+								</Anchor>
+							</Anchors>
+						</Texture>
+						<FontString name="$parentFlowerFont" fonttype="BlackFont30" lineInterval="2" text="1234567" fontStyle="border" >
+							<Color r="255" g="229" b="64"/>
+							<Size>
+								<AbsDimension x="150" y="31"/>
+							</Size>
+							<Anchors>
+								<Anchor point="left" relativePoint="right" relativeTo="$parentFlowerIcon">
+									<Offset>
+										<AbsDimension x="7" y="0"/>
+									</Offset>
+								</Anchor>
+							</Anchors>
+						</FontString>
+						<Texture name="$parentPraiseIcon" file="ui/mobile/ui2.png" x="862" y="78" w="74" h="76" >
+							<Size>
+								<AbsDimension x="83" y="86" />
+							</Size>
+							<Anchors>
+								<Anchor point="left" relativeTo="$parentFlowerFont" relativePoint="right">
+									<Offset>
+										<AbsDimension x="80" y="0" />
+									</Offset>
+								</Anchor>
+							</Anchors>
+						</Texture>
+						<FontString name="$parentPraiseNum" fonttype="BlackFont30" lineInterval="2" text="1234567" fontStyle="border">
+							<Color r="255" g="229" b="64"/>
+							<Size>
+								<AbsDimension x="150" y="31"/>
+							</Size>
+							<Anchors>
+								<Anchor point="left" relativePoint="right" relativeTo="$parentPraiseIcon">
+									<Offset>
+										<AbsDimension x="7" y="0"/>
+									</Offset>
+								</Anchor>
+							</Anchors>
+						</FontString>
+						<FontString name="$parentMapTitle" fonttype="BlackFont34" lineInterval="2" text="分享给小伙伴的地图" fontStyle="border">
+							<Color r="151" g="218" b="0"/>
+							<Size>
+								<AbsDimension x="310" y="35"/>
+							</Size>
+							<Anchors>
+								<Anchor point="top" relativePoint="top" relativeTo="$parentBkg2">
+									<Offset>
+										<AbsDimension x="0" y="18"/>
+									</Offset>
+								</Anchor>
+							</Anchors>
+						</FontString>
+						<Texture name="$parentGameModel" file="ui/mobile/ui1.png" x="822" y="84" w="76" h="76" >
+							<Size>
+								<AbsDimension x="86" y="86" />
+							</Size>
+							<Anchors>
+								<Anchor point="topleft" relativeTo="$parentMapBkg" relativePoint="topleft">
+									<Offset>
+										<AbsDimension x="20" y="12" />
+									</Offset>
+								</Anchor>
+							</Anchors>
+						</Texture>
+						<Texture name="$parentHeadIcon" file="ui/roleicons/1.png">
+							<Size>
+								<AbsDimension x="65" y="65" />
+							</Size>
+							<Anchors>
+								<Anchor point="topleft" relativeTo="$parentMapBkg" relativePoint="topleft">
+									<Offset>
+										<AbsDimension x="311" y="20" />
+									</Offset>
+								</Anchor>
+							</Anchors>
+						</Texture>
+						<FontString name="$parentTime" fonttype="BlackFont18" lineInterval="2" text="世界探索：2天前">
+							<Color r="255" g="230" b="67"/>
+							<Size>
+								<AbsDimension x="190" y="18"/>
+							</Size>
+							<Anchors>
+								<Anchor point="left" relativePoint="right" relativeTo="$parentHeadIcon">
+									<Offset>
+										<AbsDimension x="6" y="0"/>
+									</Offset>
+								</Anchor>
+							</Anchors>
+						</FontString>
+						<FontString name="$parentPraiseFont" fonttype="BlackFont28" lineInterval="2" text="分享这张地图获得" fontStyle="border" >
+							<Color r="255" g="255" b="255"/>
+							<Size>
+								<AbsDimension x="235" y="29"/>
+							</Size>
+							<Anchors>
+								<Anchor point="bottomleft" relativePoint="bottomleft" relativeTo="$parentBkg2">
+									<Offset>
+										<AbsDimension x="146" y="-41"/>
+									</Offset>
+								</Anchor>
+							</Anchors>
+						</FontString>
+						<Texture name="$parentMapPraiseIcon" file="ui/mobile/ui2.png" x="862" y="78" w="74" h="76" >
+							<Size>
+								<AbsDimension x="83" y="86" />
+							</Size>
+							<Anchors>
+								<Anchor point="left" relativeTo="$parentPraiseFont" relativePoint="right">
+									<Offset>
+										<AbsDimension x="10" y="0" />
+									</Offset>
+								</Anchor>
+							</Anchors>
+						</Texture>
+						<FontString name="$parentMapPraiseNum" fonttype="BlackFont30" lineInterval="2" text="1234567" fontStyle="border" >
+							<Color r="255" g="229" b="64"/>
+							<Size>
+								<AbsDimension x="150" y="31"/>
+							</Size>
+							<Anchors>
+								<Anchor point="left" relativePoint="right" relativeTo="$parentMapPraiseIcon">
+									<Offset>
+										<AbsDimension x="10" y="0"/>
+									</Offset>
+								</Anchor>
+							</Anchors>
+						</FontString>
+					</Layer>
+				</Layers>
+				<Frames>
+					<ProgressBar name="$parentAchiProgressBar" barname="RoleAchiProgressTex" orientation="HORIZONTAL">
+						<Size>
+							<AbsDimension x="228" y="82"/>
+						</Size>
+						<Anchors>
+							<Anchor point="center" relativeTo="$parentAchievementBkg1" relativePoint="center">
+								<Offset>
+									<AbsDimension x="0" y="0"/>
+								</Offset>
+							</Anchor>
+						</Anchors>
+						<Layers>
+							<Layer level="ARTWORK">
+								<Texture name="RoleAchiProgressTex" file="ui/mobile/ui2.png" x="269" y="95" w="202" h="73">
+									<Anchors>
+										<Anchor point="topleft" relativePoint="topleft" relativeTo="$parent">
+											<Offset>
+												<AbsDimension x="0" y="0"/>
+											</Offset>
+										</Anchor>
+									</Anchors>	
+								</Texture>
+							</Layer>
+						</Layers>
+					</ProgressBar>
+					<RichText name="$parentMapName" lineInterval="4" multiLine="false" fonttype="BlackFont28" fontStyle="border" autoextend="true" input_transparent="true">
+						<Size>
+							<AbsDimension x="200" y="80" />
+						</Size>
+						<Anchors>
+							<Anchor point="left" relativeTo="$parentGameModel" relativePoint="right">
+								<Offset>
+									<AbsDimension x="10" y="0" />
+								</Offset>
+							</Anchor>
+						</Anchors>
+					</RichText>
+					<RichText name="$parentRemark" lineInterval="8" multiLine="false" fonttype="BlackFont30" fontStyle="border" autoextend="true">
+						<Size>
+							<AbsDimension x="470" y="70" />
+						</Size>
+						<Anchors>
+							<Anchor point="topleft" relativeTo="$parentRemarkBkg" relativePoint="topleft">
+								<Offset>
+									<AbsDimension x="35" y="20" />
+								</Offset>
+							</Anchor>
+						</Anchors>
+					</RichText>
+					<EditBox name="$parentEdit" letters="90" multiLine="false" editMethod="527">
+						<Size>
+							<AbsDimension x="600" y="31" />
+						</Size>
+						<Anchors>
+							<Anchor point="topleft" relativeTo="$parentRemarkBkg" relativePoint="topleft">
+								<Offset>
+									<AbsDimension x="35" y="20" />
+								</Offset>
+							</Anchor>
+						</Anchors>
+						<FontString name="$parentFont" fonttype="BlackFont30"></FontString>
+						<FontString name="$parentDefault" default="true" fonttype="BlackFont30" text="输入地图备注" textcolor="ff6d7b88"/>
+					</EditBox>
+					<Button name="$parentModificationBtn" >
+						<Size>
+							<AbsDimension x="64" y="70" />
+						</Size>
+						<Anchors>
+							<Anchor point="bottomright" relativeTo="$parentRemarkBkg" relativePoint="bottomright">
+								<Offset>
+									<AbsDimension x="-9" y="-9" />
+								</Offset>
+							</Anchor>
+						</Anchors>
+						<NormalTexture name="$parentNormal" file="ui/mobile/ui1.png" x="961" y="506" w="57" h="62" />		
+						<PushedTexture name="$parentPushedBG" file="ui/mobile/ui1.png" x="961" y="570" w="57" h="62" />
+						<Scripts>
+							<OnClick>LobbyFrameRoleInfoModificationBtn_OnClick();</OnClick>
+						</Scripts>
+					</Button>
+					<Button name="$parentLeftArrowBtn"  hidden="true">
+						<Size>
+							<AbsDimension x="57" y="117" />
+						</Size>
+						<Anchors>
+							<Anchor point="right" relativeTo="$parentMapBkg" relativePoint="left">
+								<Offset>
+									<AbsDimension x="-10" y="0" />
+								</Offset>
+							</Anchor>
+						</Anchors>
+						<NormalTexture name="$parentNormal" file="ui/mobile/ui1.png" x="986" y="0" w="37" h="104" >
+							<Size>
+								<AbsDimension x="42" y="117" />
+							</Size>
+						</NormalTexture>
+						<Scripts>
+							<OnClick>LobbyFrameRoleInfoLeftArrowBtn_OnClick();</OnClick>
+						</Scripts>
+					</Button>
+					<Button name="$parentRightArrowBtn"  hidden="true">
+						<Size>
+							<AbsDimension x="57" y="117" />
+						</Size>
+						<Anchors>
+							<Anchor point="left" relativeTo="$parentMapBkg" relativePoint="right">
+								<Offset>
+									<AbsDimension x="10" y="0" />
+								</Offset>
+							</Anchor>
+						</Anchors>
+						<NormalTexture name="$parentNormal" file="ui/mobile/ui1.png" x="984" y="108" w="38" h="104" >	
+							<Size>
+								<AbsDimension x="42" y="117" />
+							</Size>
+						</NormalTexture>	
+						<Scripts>
+							<OnClick>LobbyFrameRoleInfoRightArrowBtn_OnClick();</OnClick>
+						</Scripts>
+					</Button>
+					<Button name="$parentAchievementBtn">
+						<Size>
+							<AbsDimension x="228" y="82" />
+						</Size>
+						<Anchors>
+							<Anchor point="topleft" relativeTo="$parentAchievementBkg1" relativePoint="topleft">
+								<Offset>
+									<AbsDimension x="0" y="0" />
+								</Offset>
+							</Anchor>
+						</Anchors>
+						<Scripts>
+							<OnClick>LobbyFrameRoleInfoAchievementBtn_OnClick();</OnClick>
+						</Scripts>
+					</Button>					
+				</Frames>
+				<Scripts>
+					<OnLoad>LobbyFrameRoleInfo_OnLoad();</OnLoad>
+					<OnUpdate>LobbyFrameRoleInfo_OnUpdate();</OnUpdate>
+					<OnShow>LobbyFrameRoleInfo_OnShow();</OnShow>
+					<OnHide>LobbyFrameRoleInfo_OnHide();</OnHide>
+				</Scripts>
+			</Frame>			
+		</Frames>
+		<Scripts>
+			<OnLoad>LobbyFrame_OnLoad();</OnLoad>
+			<OnEvent>LobbyFrame_OnEvent();</OnEvent>
+			<OnShow>LobbyFrame_OnShow();</OnShow>
+			<OnHide>LobbyFrame_OnHide();</OnHide>
+			<OnUpdate>LobbyFrame_OnUpdate();</OnUpdate>
+		</Scripts>
+	</Frame>
+</Ui>

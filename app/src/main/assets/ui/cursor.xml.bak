@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<Ui>
+	<Cursor>
+		<fpscross file="ui/cursor/fps.png" time="1000" row="1" col="1" hotspotx="16" hotspoty="16" locked="true"/>
+		<normal file="ui/cursor/arrow.png" time="1000" row="1" col="1" hotspotx="9" hotspoty="2" />
+		<link file="ui/cursor/arrow.png" time="1000" row="1" col="1" hotspotx="9" hotspoty="2" />
+	</Cursor>
+</Ui>
